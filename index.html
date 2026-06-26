@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Landing Page</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Noise filter for glass texture -->
+  <svg style="position:absolute;width:0;height:0">
+    <filter id="noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+  </svg>
+
+  <section class="hero">
+    <div class="overlay"></div>
+
+    <!-- Border frame with chamfered corners -->
+    <div class="frame">
+      <svg>
+        <path fill="none" stroke="#ffffff" stroke-opacity="0.2" stroke-width="1.5"/>
+      </svg>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="bottom-bar">
+      <button class="glass-btn btn-left">
+        <svg class="btn-border" width="180" height="53" viewBox="0 0 180 53" fill="none">
+          <defs>
+            <linearGradient id="edgeShineLeft" x1="0" y1="0" x2="180" y2="53" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.5"/>
+              <stop offset="40%" stop-color="#ffffff" stop-opacity="0.2"/>
+              <stop offset="70%" stop-color="#ffffff" stop-opacity="0.08"/>
+              <stop offset="100%" stop-color="#ffffff" stop-opacity="0.03"/>
+            </linearGradient>
+          </defs>
+          <path d="M0 12.0521V4.00028C0 1.79114 1.79085 0.00028375 3.99998 0.000279231L138.606 3.87498e-06C139.805 0 140.941 0.53786 141.7 1.46545L178.148 45.9657C180.287 48.5771 178.429 52.5003 175.053 52.5003H34.3735C33.1864 52.5003 32.0606 51.973 31.3006 51.061L0.927115 14.6128C0.328065 13.894 0 12.9878 0 12.0521Z" fill="none" stroke="url(#edgeShineLeft)" stroke-width="2"/>
+        </svg>
+        <span class="btn-label">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14.3355 4.22704C14.9623 4.85383 15.4595 5.59795 15.7987 6.4169C16.138 7.23586 16.3126 8.11361 16.3126 9.00004C16.3126 9.88647 16.138 10.7642 15.7987 11.5832C15.4595 12.4021 14.9623 13.1462 14.3355 13.773M12.3473 6.21604C13.0855 6.95444 13.5003 7.95586 13.5003 9.00004C13.5003 10.0442 13.0855 11.0456 12.3473 11.784M5.0625 6.18754L8.6025 2.64754C8.68117 2.56897 8.78135 2.51548 8.8904 2.49381C8.99945 2.47215 9.11247 2.48329 9.2152 2.52582C9.31792 2.56836 9.40573 2.64038 9.46755 2.73279C9.52936 2.8252 9.56241 2.93386 9.5625 3.04504V14.955C9.56241 15.0662 9.52936 15.1749 9.46755 15.2673C9.40573 15.3597 9.31792 15.4317 9.2152 15.4743C9.11247 15.5168 8.99945 15.5279 8.8904 15.5063C8.78135 15.4846 8.68117 15.4311 8.6025 15.3525L5.0625 11.8125H3.3825C2.7225 11.8125 2.1045 11.4323 1.929 10.797C1.76805 10.2116 1.68682 9.60717 1.6875 9.00004C1.6875 8.37754 1.7715 7.77529 1.929 7.20304C2.1045 6.56704 2.7225 6.18754 3.3825 6.18754H5.0625Z" stroke="white" stroke-width="1.14286" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          SOUND ON
+        </span>
+      </button>
+
+      <!-- Nav buttons -->
+      <nav class="nav-buttons">
+        <button class="nav-btn glass-nav active" data-section="home">
+          <img src="./assets/icons/home.svg" class="nav-icon" alt="">
+          <span>HOME</span>
+        </button>
+        <button class="nav-btn glass-nav" data-section="about">
+          <img src="./assets/icons/about.svg" class="nav-icon" alt="">
+          <span>ABOUT</span>
+        </button>
+        <button class="nav-btn glass-nav" data-section="products">
+          <img src="./assets/icons/products.svg" class="nav-icon" alt="">
+          <span>PRODUCTS</span>
+        </button>
+        <button class="nav-btn glass-nav" data-section="reach">
+          <img src="./assets/icons/reach.svg" class="nav-icon" alt="">
+          <span>REACH</span>
+        </button>
+        <button class="nav-btn nav-contact" data-section="contact">
+          <img src="./assets/icons/contact.svg" class="nav-icon nav-icon-dark" alt="">
+          <span>CONTACT US</span>
+        </button>
+      </nav>
+
+      <button class="glass-btn btn-right">
+        <svg class="btn-border" width="211" height="54" viewBox="0 0 211 54" fill="none">
+          <defs>
+            <linearGradient id="edgeShineRight" x1="0" y1="0" x2="211" y2="54" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.5"/>
+              <stop offset="40%" stop-color="#ffffff" stop-opacity="0.2"/>
+              <stop offset="70%" stop-color="#ffffff" stop-opacity="0.08"/>
+              <stop offset="100%" stop-color="#ffffff" stop-opacity="0.03"/>
+            </linearGradient>
+          </defs>
+          <path d="M183.28 53.8397H4.00715C0.719309 53.8397 -1.16446 50.0934 0.796309 47.4543L34.8527 1.61452C35.6074 0.598765 36.7982 0 38.0636 0H206.052C208.261 0 210.052 1.79086 210.052 4V21.5883C210.052 22.5016 209.74 23.3875 209.166 24.0986L186.394 52.35C185.635 53.2921 184.49 53.8397 183.28 53.8397Z" fill="none" stroke="url(#edgeShineRight)" stroke-width="2"/>
+        </svg>
+        <span class="btn-label">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5.53125 5.25H5.4375M9.65625 5.25H9.5625M10.4062 11.25H10.3125M13.7812 11.25H13.6875M5.625 5.25C5.625 5.29973 5.60525 5.34742 5.57008 5.38258C5.53492 5.41775 5.48723 5.4375 5.4375 5.4375C5.38777 5.4375 5.34008 5.41775 5.30492 5.38258C5.26975 5.34742 5.25 5.29973 5.25 5.25C5.25 5.20027 5.26975 5.15258 5.30492 5.11742C5.34008 5.08225 5.38777 5.0625 5.4375 5.0625C5.48723 5.0625 5.53492 5.08225 5.57008 5.11742C5.60525 5.15258 5.625 5.20027 5.625 5.25ZM9.75 5.25C9.75 5.29973 9.73025 5.34742 9.69508 5.38258C9.65992 5.41775 9.61223 5.4375 9.5625 5.4375C9.51277 5.4375 9.46508 5.41775 9.42992 5.38258C9.39475 5.34742 9.375 5.29973 9.375 5.25C9.375 5.20027 9.39475 5.15258 9.42992 5.11742C9.46508 5.08225 9.51277 5.0625 9.5625 5.0625C9.61223 5.0625 9.65992 5.08225 9.69508 5.11742C9.73025 5.15258 9.75 5.20027 9.75 5.25ZM10.5 11.25C10.5 11.2997 10.4802 11.3474 10.4451 11.3826C10.4099 11.4177 10.3622 11.4375 10.3125 11.4375C10.2628 11.4375 10.2151 11.4177 10.1799 11.3826C10.1448 11.3474 10.125 11.2997 10.125 11.25C10.125 11.2003 10.1448 11.1526 10.1799 11.1174C10.2151 11.0823 10.2628 11.0625 10.3125 11.0625C10.3622 11.0625 10.4099 11.0823 10.4451 11.1174C10.4802 11.1526 10.5 11.2003 10.5 11.25ZM13.875 11.25C13.875 11.2997 13.8552 11.3474 13.8201 11.3826C13.7849 11.4177 13.7372 11.4375 13.6875 11.4375C13.6378 11.4375 13.5901 11.4177 13.5549 11.3826C13.5198 11.3474 13.5 11.2997 13.5 11.25C13.5 11.2003 13.5198 11.1526 13.5549 11.1174C13.5901 11.0823 13.6378 11.0625 13.6875 11.0625C13.7372 11.0625 13.7849 11.0823 13.8201 11.1174C13.8552 11.1526 13.875 11.2003 13.875 11.25Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M7.5 12C7.5 14.0707 9.5145 15.75 12 15.75C12.6803 15.75 13.3253 15.624 13.9035 15.399C14.0453 15.3442 14.1982 15.324 14.3475 15.3517L16.5 15.75L16.011 14.2275C15.9785 14.1165 15.969 14 15.9832 13.8852C15.9974 13.7704 16.0349 13.6597 16.0935 13.56C16.3589 13.0828 16.4987 12.546 16.5 12C16.5 9.92925 14.4855 8.25 12 8.25C9.5145 8.25 7.5 9.92925 7.5 12Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M13.4047 8.43675C13.4682 8.13175 13.5 7.8195 13.5 7.5C13.5 4.6005 10.8135 2.25 7.5 2.25C4.1865 2.25 1.5 4.6005 1.5 7.5C1.5 8.334 1.72275 9.123 2.118 9.8235C2.22825 10.0185 2.265 10.2488 2.199 10.4633L1.5 12.75L4.4355 12.18C4.5915 12.1492 4.752 12.1702 4.89825 12.2325C5.75066 12.5873 6.6668 12.7634 7.59 12.75" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+          CHAT WITH US
+        </span>
+      </button>
+    </div>
+
+    <!-- Progress bar on frame bottom stroke -->
+    <div class="progress-bar">
+      <div class="progress-marker"></div>
+      <div class="progress-fill"></div>
+      <div class="progress-marker"></div>
+      <div class="progress-marker"></div>
+      <div class="progress-marker"></div>
+      <div class="progress-marker"></div>
+    </div>
+  </section>
+
+  <section id="about" class="page-section"></section>
+  <section id="products" class="page-section"></section>
+  <section id="reach" class="page-section"></section>
+  <section id="contact" class="page-section"></section>
+
+  <script>
+    function updateFrame() {
+      const frame = document.querySelector('.frame');
+      const w = frame.offsetWidth;
+      const h = frame.offsetHeight;
+      const svg = frame.querySelector('svg');
+      const path = frame.querySelector('path');
+
+      svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+
+      const r = 4;
+      const tr = { x: 46, y: 45 };
+      const br = { x: 31, y: 40 };
+      const bl = { x: 35, y: 45 };
+
+      const d = `
+        M ${w - tr.x} 0.5
+        H ${r + 0.5}
+        C ${r / 2} 0.5, 0.5 ${r / 2}, 0.5 ${r + 0.5}
+        V ${h - bl.y}
+        C 0.5 ${h - bl.y + 1}, 0.83 ${h - bl.y + 2}, 1.43 ${h - bl.y + 2.6}
+        L ${bl.x} ${h - 1.5}
+        C ${bl.x + 0.76} ${h - 0.52}, ${bl.x + 1.88} ${h - 0.0}, ${bl.x + 3.07} ${h - 0.0}
+        H ${w - br.x}
+        C ${w - br.x + 1.25} ${h}, ${w - br.x + 2.42} ${h - 0.58}, ${w - br.x + 3.18} ${h - 1.57}
+        L ${w - 0.82} ${h - br.y}
+        C ${w - 0.29} ${h - br.y - 0.7}, ${w - 0.0} ${h - br.y - 1.55}, ${w - 0.0} ${h - br.y - 2.43}
+        V ${tr.y}
+        C ${w - 0.0} ${tr.y - 1.07}, ${w - 0.43} ${tr.y - 2.09}, ${w - 1.19} ${tr.y - 2.85}
+        L ${w - tr.x + 2.81} 1.66
+        C ${w - tr.x + 2.06} 0.92, ${w - tr.x + 1.05} 0.5, ${w - tr.x} 0.5
+        Z
+      `;
+
+      path.setAttribute('d', d);
+    }
+
+    window.addEventListener('resize', updateFrame);
+    updateFrame();
+
+    // Position progress markers below each nav button
+    function positionMarkers() {
+      const bar = document.querySelector('.progress-bar');
+      const barRect = bar.getBoundingClientRect();
+      const markers = document.querySelectorAll('.progress-marker');
+      const navBtns = document.querySelectorAll('.nav-btn');
+      const fill = document.querySelector('.progress-fill');
+
+      navBtns.forEach((btn, i) => {
+        if (markers[i]) {
+          const btnRect = btn.getBoundingClientRect();
+          const center = btnRect.left + btnRect.width / 2 - barRect.left;
+          markers[i].style.left = center + 'px';
+        }
+      });
+
+      if (markers[0]) {
+        const firstMarkerLeft = parseFloat(markers[0].style.left) - 2.5;
+        fill.style.left = firstMarkerLeft + 'px';
+      }
+    }
+
+    window.addEventListener('resize', positionMarkers);
+    setTimeout(positionMarkers, 100);
+
+    // Scroll-driven progress bar
+    function updateProgress() {
+      const scrollTop = window.scrollY;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = maxScroll > 0 ? scrollTop / maxScroll : 0;
+
+      const markers = document.querySelectorAll('.progress-marker');
+      const fill = document.querySelector('.progress-fill');
+
+      if (markers.length < 2) return;
+
+      const firstLeft = parseFloat(markers[0].style.left) - 2.5;
+      const lastLeft = parseFloat(markers[markers.length - 1].style.left) + 2.5;
+      const totalWidth = lastLeft - firstLeft;
+
+      fill.style.left = firstLeft + 'px';
+      fill.style.width = (totalWidth * progress) + 'px';
+
+      const fillRight = firstLeft + totalWidth * progress;
+      markers.forEach(marker => {
+        const markerLeft = parseFloat(marker.style.left) - 2.5;
+        if (fillRight >= markerLeft) {
+          marker.classList.add('active');
+        } else {
+          marker.classList.remove('active');
+        }
+      });
+
+      const sections = ['home', 'about', 'products', 'reach', 'contact'];
+      const activeIndex = Math.min(Math.floor(progress * sections.length), sections.length - 1);
+      document.querySelectorAll('.nav-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', i === activeIndex);
+      });
+    }
+
+    window.addEventListener('scroll', updateProgress);
+    setTimeout(updateProgress, 150);
+
+    // Gradient shine animation on hover
+    document.querySelectorAll('.glass-btn').forEach(btn => {
+      const svg = btn.querySelector('.btn-border');
+      const gradient = svg.querySelector('linearGradient');
+      const stops = gradient.querySelectorAll('stop');
+      const w = parseFloat(svg.getAttribute('width'));
+      const h = parseFloat(svg.getAttribute('height'));
+      const cx = w / 2;
+      const cy = h / 2;
+      const len = Math.max(w, h);
+      const defaultAngle = Math.PI / 4;
+
+      let current = defaultAngle;
+      let target = defaultAngle;
+      let hovering = false;
+      let raf = null;
+
+      function setGradientAngle(angle) {
+        gradient.setAttribute('x1', cx - Math.cos(angle) * len / 2);
+        gradient.setAttribute('y1', cy - Math.sin(angle) * len / 2);
+        gradient.setAttribute('x2', cx + Math.cos(angle) * len / 2);
+        gradient.setAttribute('y2', cy + Math.sin(angle) * len / 2);
+      }
+
+      function lerpAngle(a, b, t) {
+        let diff = b - a;
+        while (diff > Math.PI) diff -= Math.PI * 2;
+        while (diff < -Math.PI) diff += Math.PI * 2;
+        return a + diff * t;
+      }
+
+      function tick() {
+        current = lerpAngle(current, target, 0.08);
+        setGradientAngle(current);
+
+        const opacityBoost = hovering ? 1.6 : 1;
+        stops[0].setAttribute('stop-opacity', Math.min(1, 0.5 * opacityBoost));
+        stops[1].setAttribute('stop-opacity', 0.2 * opacityBoost);
+        stops[2].setAttribute('stop-opacity', 0.08 * opacityBoost);
+        stops[3].setAttribute('stop-opacity', 0.03 * opacityBoost);
+
+        if (Math.abs(target - current) > 0.005 || hovering) {
+          raf = requestAnimationFrame(tick);
+        } else {
+          raf = null;
+        }
+      }
+
+      function startLoop() {
+        if (!raf) { raf = requestAnimationFrame(tick); }
+      }
+
+      btn.addEventListener('mousemove', e => {
+        const rect = btn.getBoundingClientRect();
+        const mx = e.clientX - rect.left - cx;
+        const my = e.clientY - rect.top - cy;
+        target = Math.atan2(my, mx);
+        hovering = true;
+        startLoop();
+      });
+
+      btn.addEventListener('mouseleave', () => {
+        target = defaultAngle;
+        hovering = false;
+        startLoop();
+      });
+    });
+
+    // Nav button border shine animation on hover
+    document.querySelectorAll('.glass-nav').forEach(btn => {
+      const defaultAngle = 135;
+      let current = defaultAngle;
+      let target = defaultAngle;
+      let hovering = false;
+      let raf = null;
+
+      function tick() {
+        let diff = target - current;
+        while (diff > 180) diff -= 360;
+        while (diff < -180) diff += 360;
+        current += diff * 0.08;
+        btn.style.setProperty('--shine-angle', current + 'deg');
+
+        if (Math.abs(diff) > 0.5 || hovering) {
+          raf = requestAnimationFrame(tick);
+        } else {
+          raf = null;
+        }
+      }
+
+      function startLoop() {
+        if (!raf) { raf = requestAnimationFrame(tick); }
+      }
+
+      btn.addEventListener('mousemove', e => {
+        const rect = btn.getBoundingClientRect();
+        const mx = e.clientX - rect.left - rect.width / 2;
+        const my = e.clientY - rect.top - rect.height / 2;
+        target = Math.atan2(my, mx) * (180 / Math.PI) + 90;
+        hovering = true;
+        startLoop();
+      });
+
+      btn.addEventListener('mouseleave', () => {
+        target = defaultAngle;
+        hovering = false;
+        startLoop();
+      });
+    });
+  </script>
+</body>
+</html>
