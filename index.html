@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Landing Page</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/lenis@1/dist/lenis.css">
 </head>
 <body>
   <!-- Noise filter for glass texture -->
@@ -190,8 +191,20 @@
   <section id="reach" class="page-section"></section>
   <section id="contact" class="page-section"></section>
 
+  <script src="https://unpkg.com/lenis@1/dist/lenis.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+
   <script>
-    // Frame sequence scroll animation
+    // Lenis smooth scroll
+    const lenis = new Lenis({ lerp: 0.1 });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(function(time) { lenis.raf(time * 1000); });
+    gsap.ticker.lagSmoothing(0);
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Frame sequence with GSAP ScrollTrigger
     (function() {
       const TOTAL_FRAMES = 210;
       const canvas = document.getElementById('frame-canvas');
@@ -200,9 +213,7 @@
       let loaded = 0;
       let currentFrame = -1;
 
-      function padNum(n) {
-        return String(n).padStart(4, '0');
-      }
+      function padNum(n) { return String(n).padStart(4, '0'); }
 
       function drawFrame(index) {
         if (index === currentFrame) return;
@@ -214,17 +225,7 @@
       function resizeCanvas() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        if (currentFrame >= 0) drawFrame(currentFrame);
-      }
-
-      function onScroll() {
-        var hero = document.querySelector('.hero');
-        var heroRect = hero.getBoundingClientRect();
-        var scrolled = -heroRect.top;
-        var scrollRange = hero.offsetHeight - window.innerHeight;
-        var progress = Math.max(0, Math.min(1, scrolled / scrollRange));
-        var frameIndex = Math.min(Math.floor(progress * TOTAL_FRAMES), TOTAL_FRAMES - 1);
-        requestAnimationFrame(function() { drawFrame(frameIndex); });
+        if (currentFrame >= 0) { currentFrame = -1; drawFrame(currentFrame + 1 || 0); }
       }
 
       for (var i = 1; i <= TOTAL_FRAMES; i++) {
@@ -232,85 +233,82 @@
         img.src = './assets/frames-webp/' + padNum(i) + '.webp';
         img.onload = function() {
           loaded++;
-          if (loaded === 1) {
-            resizeCanvas();
-            drawFrame(0);
-          }
+          if (loaded === 1) { resizeCanvas(); drawFrame(0); }
         };
         frames.push(img);
       }
 
       window.addEventListener('resize', resizeCanvas);
-      window.addEventListener('scroll', onScroll);
       resizeCanvas();
+
+      ScrollTrigger.create({
+        trigger: '.hero',
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.5,
+        onUpdate: function(self) {
+          var frameIndex = Math.min(Math.floor(self.progress * TOTAL_FRAMES), TOTAL_FRAMES - 1);
+          drawFrame(frameIndex);
+        }
+      });
     })();
 
-    // Hero text scroll animation
+    // Hero text with GSAP ScrollTrigger
     (function() {
       var sentences = document.querySelectorAll('.hero-sentence');
       var totalSentences = sentences.length;
 
-      function updateHeroText() {
-        var hero = document.querySelector('.hero');
-        var heroRect = hero.getBoundingClientRect();
-        var scrolled = -heroRect.top;
-        var scrollRange = hero.offsetHeight - window.innerHeight;
-        var progress = Math.max(0, Math.min(1, scrolled / scrollRange));
+      sentences.forEach(function(sentence, si) {
+        var lines = sentence.querySelectorAll('.hero-line');
+        var segSize = 1 / totalSentences;
+        var segStart = si * segSize;
 
-        var segmentSize = 1 / totalSentences;
+        // Staggered line wipe-in
+        lines.forEach(function(line, li) {
+          var lineStart = segStart + (segSize * 0.6 * li / lines.length);
+          var lineEnd = lineStart + segSize * 0.15;
 
-        sentences.forEach(function(sentence, si) {
-          var segStart = si * segmentSize;
-          var segEnd = segStart + segmentSize;
-          var lines = sentence.querySelectorAll('.hero-line');
-          var lineCount = lines.length;
-
-          var inPhase = segmentSize * 0.6;
-          var outPhase = segmentSize * 0.2;
-          var inStart = segStart;
-          var inEnd = segStart + inPhase;
-          var outStart = segEnd - outPhase;
-          var outEnd = segEnd;
-
-          if (progress < segStart || progress > segEnd) {
-            lines.forEach(function(line) {
-              line.classList.remove('visible', 'exit');
-              line.style.transition = 'none';
-            });
-            return;
-          }
-
-          if (progress >= outStart) {
-            var outProgress = (progress - outStart) / (outEnd - outStart);
-            lines.forEach(function(line) {
-              line.style.transition = 'clip-path 0.5s ease';
-              if (outProgress > 0.1) {
-                line.classList.remove('visible');
-                line.classList.add('exit');
-              } else {
-                line.classList.add('visible');
-                line.classList.remove('exit');
+          ScrollTrigger.create({
+            trigger: '.hero',
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: 0.3,
+            onUpdate: function(self) {
+              var p = self.progress;
+              if (p >= lineStart && p < lineEnd) {
+                var t = (p - lineStart) / (lineEnd - lineStart);
+                line.style.clipPath = 'inset(0 ' + (100 - t * 100) + '% 0 0)';
+              } else if (p >= lineEnd && p < segStart + segSize * 0.8) {
+                line.style.clipPath = 'inset(0 0% 0 0)';
               }
-            });
-            return;
-          }
-
-          var inProgress = (progress - inStart) / (inEnd - inStart);
-          lines.forEach(function(line, li) {
-            var lineThreshold = li / lineCount;
-            line.style.transition = 'clip-path 0.5s ease';
-            if (inProgress > lineThreshold) {
-              line.classList.add('visible');
-              line.classList.remove('exit');
-            } else {
-              line.classList.remove('visible', 'exit');
             }
           });
         });
-      }
 
-      window.addEventListener('scroll', updateHeroText);
-      updateHeroText();
+        // Group wipe-out
+        var outStart = segStart + segSize * 0.8;
+        var outEnd = segStart + segSize;
+
+        ScrollTrigger.create({
+          trigger: '.hero',
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: 0.3,
+          onUpdate: function(self) {
+            var p = self.progress;
+            if (p < segStart) {
+              lines.forEach(function(line) { line.style.clipPath = 'inset(0 100% 0 0)'; });
+            } else if (p >= outStart && p <= outEnd) {
+              var t = (p - outStart) / (outEnd - outStart);
+              lines.forEach(function(line) {
+                line.style.clipPath = 'inset(0 0 0 ' + (t * 100) + '%)';
+              });
+            } else if (p > outEnd) {
+              lines.forEach(function(line) { line.style.clipPath = 'inset(0 0 0 100%)'; });
+            }
+          }
+        });
+      });
     })();
 
     function updateFrame() {
@@ -377,43 +375,43 @@
     window.addEventListener('resize', positionMarkers);
     setTimeout(positionMarkers, 100);
 
-    // Scroll-driven progress bar
-    function updateProgress() {
-      const scrollTop = window.scrollY;
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = maxScroll > 0 ? scrollTop / maxScroll : 0;
+    // Scroll-driven progress bar with GSAP
+    ScrollTrigger.create({
+      trigger: document.documentElement,
+      start: 'top top',
+      end: 'bottom bottom',
+      scrub: 0.3,
+      onUpdate: function(self) {
+        var progress = self.progress;
+        var markers = document.querySelectorAll('.progress-marker');
+        var fill = document.querySelector('.progress-fill');
 
-      const markers = document.querySelectorAll('.progress-marker');
-      const fill = document.querySelector('.progress-fill');
+        if (markers.length < 2) return;
 
-      if (markers.length < 2) return;
+        var firstLeft = parseFloat(markers[0].style.left) - 2.5;
+        var lastLeft = parseFloat(markers[markers.length - 1].style.left) + 2.5;
+        var totalWidth = lastLeft - firstLeft;
 
-      const firstLeft = parseFloat(markers[0].style.left) - 2.5;
-      const lastLeft = parseFloat(markers[markers.length - 1].style.left) + 2.5;
-      const totalWidth = lastLeft - firstLeft;
+        fill.style.left = firstLeft + 'px';
+        fill.style.width = (totalWidth * progress) + 'px';
 
-      fill.style.left = firstLeft + 'px';
-      fill.style.width = (totalWidth * progress) + 'px';
+        var fillRight = firstLeft + totalWidth * progress;
+        markers.forEach(function(marker) {
+          var markerLeft = parseFloat(marker.style.left) - 2.5;
+          if (fillRight >= markerLeft) {
+            marker.classList.add('active');
+          } else {
+            marker.classList.remove('active');
+          }
+        });
 
-      const fillRight = firstLeft + totalWidth * progress;
-      markers.forEach(marker => {
-        const markerLeft = parseFloat(marker.style.left) - 2.5;
-        if (fillRight >= markerLeft) {
-          marker.classList.add('active');
-        } else {
-          marker.classList.remove('active');
-        }
-      });
-
-      const sections = ['home', 'about', 'products', 'reach', 'contact'];
-      const activeIndex = Math.min(Math.floor(progress * sections.length), sections.length - 1);
-      document.querySelectorAll('.nav-btn').forEach((btn, i) => {
-        btn.classList.toggle('active', i === activeIndex);
-      });
-    }
-
-    window.addEventListener('scroll', updateProgress);
-    setTimeout(updateProgress, 150);
+        var sections = ['home', 'about', 'products', 'reach', 'contact'];
+        var activeIndex = Math.min(Math.floor(progress * sections.length), sections.length - 1);
+        document.querySelectorAll('.nav-btn').forEach(function(btn, i) {
+          btn.classList.toggle('active', i === activeIndex);
+        });
+      }
+    });
 
     // Gradient shine animation on hover
     document.querySelectorAll('.glass-btn').forEach(btn => {
