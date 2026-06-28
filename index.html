@@ -226,21 +226,25 @@
       function resizeCanvas() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        if (currentFrame >= 0) { currentFrame = -1; drawFrame(currentFrame + 1 || 0); }
+        currentFrame = -1;
+        drawFrame(0);
       }
 
-      for (var i = 1; i <= TOTAL_FRAMES; i++) {
+      var firstFrame = new Image();
+      firstFrame.src = './assets/frames-webp/0001.webp';
+      firstFrame.onload = function() {
+        frames[0] = firstFrame;
+        resizeCanvas();
+      };
+      frames.push(firstFrame);
+
+      for (var i = 2; i <= TOTAL_FRAMES; i++) {
         var img = new Image();
         img.src = './assets/frames-webp/' + padNum(i) + '.webp';
-        img.onload = function() {
-          loaded++;
-          if (loaded === 1) { resizeCanvas(); drawFrame(0); }
-        };
         frames.push(img);
       }
 
       window.addEventListener('resize', resizeCanvas);
-      resizeCanvas();
 
       ScrollTrigger.create({
         trigger: '.hero',
