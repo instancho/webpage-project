@@ -70,7 +70,8 @@
     </div>
 
     <!-- Logo -->
-    <img src="./assets/Logo.svg" class="logo" alt="Logo">
+    <img src="./assets/Logo.svg" class="logo logo-desktop" alt="Logo">
+    <img src="./assets/Logo-mobile.svg" class="logo logo-mobile" alt="Logo">
 
     <!-- Language selector -->
     <div class="lang-selector">
@@ -350,25 +351,44 @@
     window.addEventListener('resize', updateFrame);
     updateFrame();
 
-    // Position progress markers below each nav button
+    // Position progress markers below/beside each nav button
+    function isMobile() { return window.innerWidth <= 768; }
+
     function positionMarkers() {
-      const bar = document.querySelector('.progress-bar');
-      const barRect = bar.getBoundingClientRect();
-      const markers = document.querySelectorAll('.progress-marker');
-      const navBtns = document.querySelectorAll('.nav-btn');
-      const fill = document.querySelector('.progress-fill');
+      var bar = document.querySelector('.progress-bar');
+      var barRect = bar.getBoundingClientRect();
+      var markers = document.querySelectorAll('.progress-marker');
+      var navBtns = document.querySelectorAll('.nav-btn');
+      var fill = document.querySelector('.progress-fill');
 
-      navBtns.forEach((btn, i) => {
-        if (markers[i]) {
-          const btnRect = btn.getBoundingClientRect();
-          const center = btnRect.left + btnRect.width / 2 - barRect.left;
-          markers[i].style.left = center + 'px';
+      if (isMobile()) {
+        navBtns.forEach(function(btn, i) {
+          if (markers[i]) {
+            var btnRect = btn.getBoundingClientRect();
+            var center = btnRect.top + btnRect.height / 2 - barRect.top;
+            markers[i].style.left = '';
+            markers[i].style.top = center + 'px';
+          }
+        });
+        if (markers[0]) {
+          var firstTop = parseFloat(markers[0].style.top) - 2.5;
+          fill.style.left = '';
+          fill.style.top = firstTop + 'px';
         }
-      });
-
-      if (markers[0]) {
-        const firstMarkerLeft = parseFloat(markers[0].style.left) - 2.5;
-        fill.style.left = firstMarkerLeft + 'px';
+      } else {
+        navBtns.forEach(function(btn, i) {
+          if (markers[i]) {
+            var btnRect = btn.getBoundingClientRect();
+            var center = btnRect.left + btnRect.width / 2 - barRect.left;
+            markers[i].style.top = '';
+            markers[i].style.left = center + 'px';
+          }
+        });
+        if (markers[0]) {
+          var firstLeft = parseFloat(markers[0].style.left) - 2.5;
+          fill.style.top = '';
+          fill.style.left = firstLeft + 'px';
+        }
       }
     }
 
@@ -388,22 +408,43 @@
 
         if (markers.length < 2) return;
 
-        var firstLeft = parseFloat(markers[0].style.left) - 2.5;
-        var lastLeft = parseFloat(markers[markers.length - 1].style.left) + 2.5;
-        var totalWidth = lastLeft - firstLeft;
+        if (isMobile()) {
+          var firstTop = parseFloat(markers[0].style.top) - 2.5;
+          var lastTop = parseFloat(markers[markers.length - 1].style.top) + 2.5;
+          var totalHeight = lastTop - firstTop;
 
-        fill.style.left = firstLeft + 'px';
-        fill.style.width = (totalWidth * progress) + 'px';
+          fill.style.top = firstTop + 'px';
+          fill.style.width = '';
+          fill.style.height = (totalHeight * progress) + 'px';
 
-        var fillRight = firstLeft + totalWidth * progress;
-        markers.forEach(function(marker) {
-          var markerLeft = parseFloat(marker.style.left) - 2.5;
-          if (fillRight >= markerLeft) {
-            marker.classList.add('active');
-          } else {
-            marker.classList.remove('active');
-          }
-        });
+          var fillBottom = firstTop + totalHeight * progress;
+          markers.forEach(function(marker) {
+            var markerTop = parseFloat(marker.style.top) - 2.5;
+            if (fillBottom >= markerTop) {
+              marker.classList.add('active');
+            } else {
+              marker.classList.remove('active');
+            }
+          });
+        } else {
+          var firstLeft = parseFloat(markers[0].style.left) - 2.5;
+          var lastLeft = parseFloat(markers[markers.length - 1].style.left) + 2.5;
+          var totalWidth = lastLeft - firstLeft;
+
+          fill.style.left = firstLeft + 'px';
+          fill.style.height = '';
+          fill.style.width = (totalWidth * progress) + 'px';
+
+          var fillRight = firstLeft + totalWidth * progress;
+          markers.forEach(function(marker) {
+            var markerLeft = parseFloat(marker.style.left) - 2.5;
+            if (fillRight >= markerLeft) {
+              marker.classList.add('active');
+            } else {
+              marker.classList.remove('active');
+            }
+          });
+        }
 
         var sections = ['home', 'about', 'products', 'reach', 'contact'];
         var activeIndex = Math.min(Math.floor(progress * sections.length), sections.length - 1);
