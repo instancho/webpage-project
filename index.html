@@ -258,7 +258,7 @@
       });
     })();
 
-    // Hero text with GSAP ScrollTrigger
+    // Hero text with GSAP ScrollTrigger — single trigger per sentence
     (function() {
       var sentences = document.querySelectorAll('.hero-sentence');
       var totalSentences = sentences.length;
@@ -267,32 +267,9 @@
         var lines = sentence.querySelectorAll('.hero-line');
         var segSize = 1 / totalSentences;
         var segStart = si * segSize;
-
-        // Staggered line wipe-in
-        lines.forEach(function(line, li) {
-          var lineStart = segStart + (segSize * 0.6 * li / lines.length);
-          var lineEnd = lineStart + segSize * 0.15;
-
-          ScrollTrigger.create({
-            trigger: '.hero',
-            start: 'top top',
-            end: 'bottom bottom',
-            scrub: 0.3,
-            onUpdate: function(self) {
-              var p = self.progress;
-              if (p >= lineStart && p < lineEnd) {
-                var t = (p - lineStart) / (lineEnd - lineStart);
-                line.style.clipPath = 'inset(0 ' + (100 - t * 100) + '% 0 0)';
-              } else if (p >= lineEnd && p < segStart + segSize * 0.8) {
-                line.style.clipPath = 'inset(0 0% 0 0)';
-              }
-            }
-          });
-        });
-
-        // Group wipe-out
-        var outStart = segStart + segSize * 0.8;
-        var outEnd = segStart + segSize;
+        var segEnd = segStart + segSize;
+        var inEnd = segStart + segSize * 0.6;
+        var holdEnd = segStart + segSize * 0.8;
 
         ScrollTrigger.create({
           trigger: '.hero',
@@ -301,16 +278,48 @@
           scrub: 0.3,
           onUpdate: function(self) {
             var p = self.progress;
+
+            // Before this sentence — fully hidden
             if (p < segStart) {
               lines.forEach(function(line) { line.style.clipPath = 'inset(0 100% 0 0)'; });
-            } else if (p >= outStart && p <= outEnd) {
-              var t = (p - outStart) / (outEnd - outStart);
-              lines.forEach(function(line) {
-                line.style.clipPath = 'inset(0 0 0 ' + (t * 100) + '%)';
-              });
-            } else if (p > outEnd) {
-              lines.forEach(function(line) { line.style.clipPath = 'inset(0 0 0 100%)'; });
+              return;
             }
+
+            // After this sentence — fully hidden
+            if (p >= segEnd) {
+              lines.forEach(function(line) { line.style.clipPath = 'inset(0 0 0 100%)'; });
+              return;
+            }
+
+            // Wipe-in phase: staggered per line
+            if (p < inEnd) {
+              var inProgress = (p - segStart) / (inEnd - segStart);
+              lines.forEach(function(line, li) {
+                var lineStart = li / lines.length;
+                var lineEnd = (li + 1) / lines.length;
+                if (inProgress < lineStart) {
+                  line.style.clipPath = 'inset(0 100% 0 0)';
+                } else if (inProgress >= lineEnd) {
+                  line.style.clipPath = 'inset(0 0% 0 0)';
+                } else {
+                  var t = (inProgress - lineStart) / (lineEnd - lineStart);
+                  line.style.clipPath = 'inset(0 ' + (100 - t * 100) + '% 0 0)';
+                }
+              });
+              return;
+            }
+
+            // Hold phase — fully visible
+            if (p < holdEnd) {
+              lines.forEach(function(line) { line.style.clipPath = 'inset(0 0% 0 0)'; });
+              return;
+            }
+
+            // Wipe-out phase: all lines together
+            var outProgress = (p - holdEnd) / (segEnd - holdEnd);
+            lines.forEach(function(line) {
+              line.style.clipPath = 'inset(0 0 0 ' + (outProgress * 100) + '%)';
+            });
           }
         });
       });
