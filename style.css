@@ -18,14 +18,25 @@ body {
 .hero {
   position: relative;
   width: 100vw;
+  height: 400vh;
+  background: #000;
+}
+
+#frame-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
   height: 100vh;
-  background: url('./assets/bg.png') center center / cover no-repeat;
+  z-index: 0;
 }
 
 .overlay {
-  position: absolute;
+  position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+  pointer-events: none;
 }
 
 .frame {
@@ -238,13 +249,17 @@ body {
 }
 
 .glass-nav.active::after {
-  padding: 1.5px;
+  padding: 0.5px;
   opacity: 0.8;
 }
 
 .glass-nav:hover {
   background: rgba(0, 0, 0, 0.15);
-  box-shadow: 0px 3.3px 9.16px rgba(0, 0, 0, 0.39), inset 0 1px 6px rgba(0, 0, 0, 0.35), inset 0 -1px 1px rgba(255, 255, 255, 0.04);
+  box-shadow:
+    0px 3.3px 9.16px rgba(0, 0, 0, 0.39),
+    inset 0 1px 6px rgba(0, 0, 0, 0.35),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.04),
+    0 0 12px rgba(255, 255, 255, 0.08);
 }
 
 .glass-nav::after {
@@ -252,14 +267,15 @@ body {
   position: absolute;
   inset: 0;
   border-radius: 8px;
-  padding: 1px;
+  padding: var(--gc-border-w, 0.75px);
   background: conic-gradient(
     from var(--shine-angle, 135deg),
-    rgba(255, 255, 255, 0.5) 0deg,
-    rgba(255, 255, 255, 0.08) 90deg,
+    rgba(255, 255, 255, var(--gc-shine, 0.55)) 0deg,
+    rgba(255, 255, 255, 0.1) 60deg,
+    rgba(255, 255, 255, 0.03) 120deg,
     rgba(255, 255, 255, 0.03) 180deg,
-    rgba(255, 255, 255, 0.08) 270deg,
-    rgba(255, 255, 255, 0.5) 360deg
+    rgba(255, 255, 255, 0.1) 300deg,
+    rgba(255, 255, 255, var(--gc-shine, 0.55)) 360deg
   );
   mask:
     linear-gradient(#fff 0 0) content-box,
@@ -270,12 +286,13 @@ body {
   mask-composite: exclude;
   -webkit-mask-composite: xor;
   pointer-events: none;
-  transition: opacity 0.3s ease;
-  opacity: 0.5;
+  transition: opacity 0.3s ease, padding 0.3s ease;
+  opacity: var(--gc-idle, 1);
 }
 
 .glass-nav:hover::after {
   opacity: 1;
+  padding: 0.75px;
 }
 
 /* Contact button — solid white */
@@ -291,8 +308,8 @@ body {
 
 /* Nav icons */
 .nav-icon {
-  width: 10px;
-  height: 10px;
+  width: 14px;
+  height: 14px;
 }
 
 .nav-icon-dark {
@@ -334,6 +351,127 @@ body {
 
 .progress-marker.active {
   opacity: 1;
+}
+
+/* Liquid glass (iOS 26 style) */
+.liquid-glass {
+  isolation: isolate;
+}
+
+.liquid-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  backdrop-filter: var(--liquid-filter);
+  -webkit-backdrop-filter: var(--liquid-filter);
+}
+
+.liquid-glass .liquid-specular {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+  background-size: 100% 100%;
+  mix-blend-mode: screen;
+}
+
+.liquid-glass .liquid-tint {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.0);
+  box-shadow: inset 0 0 6px -2px rgba(255, 255, 255, 0.15);
+}
+
+/* Glass Controls Panel */
+#gc-toggle {
+  position: fixed;
+  top: 40px;
+  right: 40px;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: 'Hashgraph', sans-serif;
+}
+
+#glass-controls {
+  position: fixed;
+  top: 40px;
+  right: 40px;
+  z-index: 101;
+  width: 260px;
+  background: rgba(15, 15, 20, 0.92);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 14px;
+  color: #fff;
+  font-family: -apple-system, sans-serif;
+  font-size: 12px;
+  display: none;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+#glass-controls.open {
+  display: block;
+}
+
+#glass-controls .gc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+#glass-controls .gc-header button {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 18px;
+  cursor: pointer;
+}
+
+#glass-controls .gc-section {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.3);
+  margin: 12px 0 4px;
+}
+
+#glass-controls label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 11px;
+}
+
+#glass-controls input[type="range"] {
+  flex: 1;
+  accent-color: #8b7cf7;
+}
+
+#glass-controls span {
+  min-width: 32px;
+  text-align: right;
+  font-family: monospace;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.4);
 }
 
 /* Page sections */
