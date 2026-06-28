@@ -279,19 +279,27 @@
           onUpdate: function(self) {
             var p = self.progress;
 
+            var vertGrad = 'linear-gradient(to bottom, #FFFFFF, #BDBDBD)';
+
             // Before this sentence — fully hidden
             if (p < segStart) {
-              lines.forEach(function(line) { line.style.clipPath = 'inset(0 100% 0 0)'; });
+              lines.forEach(function(line) {
+                line.style.clipPath = 'inset(0 100% 0 0)';
+                line.style.background = vertGrad;
+              });
               return;
             }
 
             // After this sentence — fully hidden
             if (p >= segEnd) {
-              lines.forEach(function(line) { line.style.clipPath = 'inset(0 0 0 100%)'; });
+              lines.forEach(function(line) {
+                line.style.clipPath = 'inset(0 0 0 100%)';
+                line.style.background = vertGrad;
+              });
               return;
             }
 
-            // Wipe-in phase: staggered per line
+            // Wipe-in phase: staggered per line with orange leading edge
             if (p < inEnd) {
               var inProgress = (p - segStart) / (inEnd - segStart);
               lines.forEach(function(line, li) {
@@ -299,26 +307,42 @@
                 var lineEnd = (li + 1) / lines.length;
                 if (inProgress < lineStart) {
                   line.style.clipPath = 'inset(0 100% 0 0)';
+                  line.style.background = vertGrad;
                 } else if (inProgress >= lineEnd) {
                   line.style.clipPath = 'inset(0 0% 0 0)';
+                  line.style.background = vertGrad;
+                  line.style.backgroundSize = '100% 300%';
+                  line.style.backgroundPosition = '0 ' + (li * 50) + '%';
                 } else {
                   var t = (inProgress - lineStart) / (lineEnd - lineStart);
-                  line.style.clipPath = 'inset(0 ' + (100 - t * 100) + '% 0 0)';
+                  var reveal = t * 100;
+                  line.style.clipPath = 'inset(0 ' + (100 - reveal) + '% 0 0)';
+                  line.style.background = 'linear-gradient(to right, #FFFFFF ' + Math.max(0, reveal - 8) + '%, #F95303 ' + reveal + '%)';
+                  line.style.backgroundSize = '100% 100%';
+                  line.style.backgroundPosition = '0 0';
                 }
               });
               return;
             }
 
-            // Hold phase — fully visible
+            // Hold phase — fully visible, restore vertical gradient
             if (p < holdEnd) {
-              lines.forEach(function(line) { line.style.clipPath = 'inset(0 0% 0 0)'; });
+              lines.forEach(function(line, li) {
+                line.style.clipPath = 'inset(0 0% 0 0)';
+                line.style.background = vertGrad;
+                line.style.backgroundSize = '100% 300%';
+                line.style.backgroundPosition = '0 ' + (li * 50) + '%';
+              });
               return;
             }
 
             // Wipe-out phase: all lines together
             var outProgress = (p - holdEnd) / (segEnd - holdEnd);
-            lines.forEach(function(line) {
+            lines.forEach(function(line, li) {
               line.style.clipPath = 'inset(0 0 0 ' + (outProgress * 100) + '%)';
+              line.style.background = vertGrad;
+              line.style.backgroundSize = '100% 300%';
+              line.style.backgroundPosition = '0 ' + (li * 50) + '%';
             });
           }
         });
