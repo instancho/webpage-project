@@ -75,29 +75,25 @@ body {
   font-family: 'Hashgraph', sans-serif;
   font-size: clamp(22px, 3.2vw, 42px);
   font-weight: 600;
+  color: transparent;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  line-height: 1.2;
+}
+
+.hero-char {
   background: linear-gradient(to bottom, #FFFFFF, #BDBDBD);
   background-size: 100% 300%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  line-height: 1.2;
-  clip-path: inset(0 100% 0 0);
-  transition: none;
+  opacity: 0;
+  display: inline-block;
 }
 
-.hero-line:nth-child(1) { background-position: 0 0%; }
-.hero-line:nth-child(2) { background-position: 0 50%; }
-.hero-line:nth-child(3) { background-position: 0 100%; }
-
-.hero-line.visible {
-  clip-path: inset(0 0% 0 0);
-}
-
-.hero-line.exit {
-  clip-path: inset(0 0 0 100%);
-}
+.hero-char:is(.hero-line:nth-child(1) *) { background-position: 0 0%; }
+.hero-char:is(.hero-line:nth-child(2) *) { background-position: 0 50%; }
+.hero-char:is(.hero-line:nth-child(3) *) { background-position: 0 100%; }
 
 /* Logo */
 .logo {
