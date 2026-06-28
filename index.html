@@ -299,27 +299,55 @@
               return;
             }
 
+            var orangeStyle = 'linear-gradient(#F95303, #F95303)';
+
             // Reveal phase — letter by letter
             if (p < revealEnd) {
               var revealProgress = (p - segStart) / (revealEnd - segStart);
               var visibleCount = Math.floor(revealProgress * totalChars);
               allChars.forEach(function(ch, i) {
-                ch.style.opacity = i < visibleCount ? '1' : '0';
+                if (i < visibleCount - 1) {
+                  ch.style.opacity = '1';
+                  ch.style.background = '';
+                } else if (i === visibleCount - 1) {
+                  ch.style.opacity = '1';
+                  ch.style.background = orangeStyle;
+                  ch.style.webkitBackgroundClip = 'text';
+                  ch.style.backgroundClip = 'text';
+                } else {
+                  ch.style.opacity = '0';
+                  ch.style.background = '';
+                }
               });
               return;
             }
 
             // Hold phase
             if (p < holdEnd) {
-              allChars.forEach(function(ch) { ch.style.opacity = '1'; });
+              allChars.forEach(function(ch) {
+                ch.style.opacity = '1';
+                ch.style.background = '';
+              });
               return;
             }
 
             // Exit phase — letter by letter reverse (last disappears first)
             var exitProgress = (p - holdEnd) / (segEnd - holdEnd);
             var hideCount = Math.floor(exitProgress * totalChars);
+            var lastVisible = totalChars - hideCount - 1;
             allChars.forEach(function(ch, i) {
-              ch.style.opacity = i < totalChars - hideCount ? '1' : '0';
+              if (i < lastVisible) {
+                ch.style.opacity = '1';
+                ch.style.background = '';
+              } else if (i === lastVisible) {
+                ch.style.opacity = '1';
+                ch.style.background = orangeStyle;
+                ch.style.webkitBackgroundClip = 'text';
+                ch.style.backgroundClip = 'text';
+              } else {
+                ch.style.opacity = '0';
+                ch.style.background = '';
+              }
             });
           }
         });
