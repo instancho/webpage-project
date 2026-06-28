@@ -271,7 +271,7 @@
           for (var c = 0; c < text.length; c++) {
             var span = document.createElement('span');
             span.textContent = text[c];
-            span.className = 'hero-char';
+            span.className = text[c] === ' ' ? 'hero-char is-space' : 'hero-char';
             line.appendChild(span);
           }
         });

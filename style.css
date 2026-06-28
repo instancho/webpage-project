@@ -88,7 +88,11 @@ body {
   background-clip: text;
   color: transparent;
   opacity: 0;
-  display: inline-block;
+  font-family: 'Hashgraph', sans-serif;
+}
+
+.hero-char.is-space {
+  white-space: pre;
 }
 
 .hero-char:is(.hero-line:nth-child(1) *) { background-position: 0 0%; }
