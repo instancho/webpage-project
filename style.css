@@ -55,12 +55,13 @@ body {
 /* Hero text */
 .hero-text {
   position: fixed;
-  bottom: 18%;
+  bottom: 20%;
   left: 50%;
   transform: translateX(-50%);
   z-index: 4;
   text-align: center;
   pointer-events: none;
+  padding-bottom: 16px;
 }
 
 .hero-sentence {
@@ -593,23 +594,23 @@ body {
 
   .logo-mobile {
     display: block;
-    top: 22px;
+    top: 26px;
     left: 28px;
     height: 36px;
   }
 
   .lang-selector {
-    top: 28px;
-    right: auto;
-    left: 50%;
-    transform: translateX(-50%);
+    top: 32px;
+    right: 120px;
+    left: auto;
+    transform: none;
   }
 
   .top-contact {
-    top: 18px;
-    right: 22px;
-    width: 130px;
-    height: 40px;
+    top: 26px;
+    right: 36px;
+    width: 133px;
+    height: 41px;
   }
 
   .top-contact-bg {
@@ -618,29 +619,52 @@ body {
   }
 
   .top-contact-label {
-    font-size: 9px;
-    letter-spacing: 1px;
+    font-size: 8px;
+    letter-spacing: 0.5px;
   }
 
-  /* Bottom bar — side buttons only, 8px from frame */
+  .lang-selector {
+    right: 177px;
+  }
+
+  /* Bottom bar — side buttons only */
   .bottom-bar {
     bottom: 24px;
-    left: 24px;
-    right: 24px;
+    left: 30px;
+    right: 30px;
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-end;
   }
 
-  /* Mobile nav — vertical left side, 8px from frame */
+  /* Mobile button sizes */
+  .btn-left {
+    width: 149px;
+    height: 44px;
+  }
+
+  .btn-left:hover {
+    transform: translate(1px, 1px);
+  }
+
+  .btn-right {
+    width: 160px;
+    height: 44px;
+  }
+
+  .btn-right:hover {
+    transform: translate(-1px, 1px);
+  }
+
+  /* Mobile nav — vertical left side, inside the frame */
   .nav-buttons {
     display: flex;
     flex-direction: column;
     position: fixed;
-    left: 32px;
+    left: 31px;
     top: 50%;
     transform: translateY(-50%);
-    gap: 20px;
+    gap: 24px;
     margin-bottom: 0;
     z-index: 10;
     align-items: flex-start;
@@ -671,30 +695,25 @@ body {
     background: linear-gradient(to bottom, #ffffff calc(100% - 32px), transparent 100%);
   }
 
+  /* Markers inside frame, left edge touching outline */
   .progress-marker {
-    transform: translate(calc(-100% - 4px), -50%);
+    transform: translate(0, -50%);
     top: auto;
     left: 0;
   }
 
   /* Hero text */
   .hero-text {
-    bottom: 12%;
+    bottom: 14%;
+    width: 90%;
   }
 
   .hero-line {
-    font-size: clamp(18px, 5vw, 28px);
+    font-size: clamp(16px, 4.5vw, 26px);
   }
 
-  /* Side buttons — fit within frame, 8px gap */
-  .btn-left {
-    width: 45%;
-    height: 48px;
-  }
-
-  .btn-right {
-    width: 45%;
-    height: 48px;
+  .hero-sentence {
+    width: 100%;
   }
 
   .btn-label {
@@ -707,4 +726,5 @@ body {
     width: 14px;
     height: 14px;
   }
+
 }

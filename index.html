@@ -220,7 +220,27 @@
         if (index === currentFrame) return;
         if (!frames[index] || !frames[index].complete) return;
         currentFrame = index;
-        ctx.drawImage(frames[index], 0, 0, canvas.width, canvas.height);
+
+        var img = frames[index];
+        var iw = img.naturalWidth, ih = img.naturalHeight;
+        var cw = canvas.width, ch = canvas.height;
+        var imgRatio = iw / ih;
+        var canvasRatio = cw / ch;
+        var sx, sy, sw, sh;
+
+        if (canvasRatio > imgRatio) {
+          sw = iw;
+          sh = iw / canvasRatio;
+          sx = 0;
+          sy = (ih - sh) / 2;
+        } else {
+          sh = ih;
+          sw = ih * canvasRatio;
+          sx = (iw - sw) / 2;
+          sy = 0;
+        }
+
+        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, cw, ch);
       }
 
       function resizeCanvas() {
@@ -353,6 +373,77 @@
         });
       });
     })();
+
+    // Mobile button shape adaptation
+    function updateMobileButtons() {
+      var mobile = window.innerWidth <= 768;
+      var btnLeft = document.querySelector('.btn-left');
+      var btnRight = document.querySelector('.btn-right');
+      var svgLeft = btnLeft.querySelector('.btn-border');
+      var svgRight = btnRight.querySelector('.btn-border');
+      var topContact = document.querySelector('.top-contact');
+      var topSvg = topContact.querySelector('.top-contact-bg');
+      var topPath = topSvg.querySelector('path');
+
+      if (mobile) {
+        var lw = 149, lh = 44, rw = 160, rh = 44;
+
+        btnLeft.style.width = lw + 'px';
+        btnLeft.style.height = lh + 'px';
+        var lpd = 'M0 10V3.3C0 1.48 1.48 0 3.3 0H114.4C115.4 0 116.3 0.44 116.95 1.21L146.4 37.95C148.2 40.12 146.7 43.56 144.4 43.56H28.4C27.4 43.56 26.5 43.12 25.83 42.35L0.77 12.1C0.28 11.5 0 10.76 0 10Z';
+        btnLeft.style.clipPath = "path('" + lpd + "')";
+        svgLeft.setAttribute('width', lw);
+        svgLeft.setAttribute('height', lh);
+        svgLeft.setAttribute('viewBox', '0 0 ' + lw + ' ' + lh);
+        svgLeft.querySelector('path').setAttribute('d', lpd);
+
+        var rpd = 'M138.6 43.56H3.04C0.55 43.56 -0.94 40.54 0.61 38.41L26.3 1.31C26.92 0.48 27.9 0 28.93 0H155.7C157.5 0 159 1.48 159 3.3V17.5C159 18.23 158.76 18.94 158.32 19.53L141 42.35C140.42 43.11 139.55 43.56 138.6 43.56Z';
+        btnRight.style.width = rw + 'px';
+        btnRight.style.height = rh + 'px';
+        btnRight.style.clipPath = "path('" + rpd + "')";
+        svgRight.setAttribute('width', rw);
+        svgRight.setAttribute('height', rh);
+        svgRight.setAttribute('viewBox', '0 0 ' + rw + ' ' + rh);
+        svgRight.querySelector('path').setAttribute('d', rpd);
+
+        // Mobile contact button — smaller with matching diagonal
+        var cw = 133, ch = 41;
+        var cpd = 'M132 26.2C128.2 22.2 115.5 8.5 107.4 0.8C106.8 0.28 106 0 105 0H3.6C1.62 0 0 1.62 0 3.6V37.4C0 39.4 1.62 41 3.6 41H130C131.98 41 133.6 39.4 133.6 37.4V28.5C133.6 27.6 133.3 26.7 132.7 26.2Z';
+        topContact.style.width = cw + 'px';
+        topContact.style.height = ch + 'px';
+        topSvg.setAttribute('width', cw);
+        topSvg.setAttribute('height', ch);
+        topSvg.setAttribute('viewBox', '0 0 ' + cw + ' ' + ch);
+        topPath.setAttribute('d', cpd);
+      } else {
+        btnLeft.style.width = '180px';
+        btnLeft.style.height = '53px';
+        btnLeft.style.clipPath = "path('M0 12.0521V4.00028C0 1.79114 1.79085 0.00028375 3.99998 0.000279231L138.606 3.87498e-06C139.805 0 140.941 0.53786 141.7 1.46545L178.148 45.9657C180.287 48.5771 178.429 52.5003 175.053 52.5003H34.3735C33.1864 52.5003 32.0606 51.973 31.3006 51.061L0.927115 14.6128C0.328065 13.894 0 12.9878 0 12.0521Z')";
+        svgLeft.setAttribute('width', 180);
+        svgLeft.setAttribute('height', 53);
+        svgLeft.setAttribute('viewBox', '0 0 180 53');
+        svgLeft.querySelector('path').setAttribute('d', 'M0 12.0521V4.00028C0 1.79114 1.79085 0.00028375 3.99998 0.000279231L138.606 3.87498e-06C139.805 0 140.941 0.53786 141.7 1.46545L178.148 45.9657C180.287 48.5771 178.429 52.5003 175.053 52.5003H34.3735C33.1864 52.5003 32.0606 51.973 31.3006 51.061L0.927115 14.6128C0.328065 13.894 0 12.9878 0 12.0521Z');
+
+        btnRight.style.width = '211px';
+        btnRight.style.height = '54px';
+        btnRight.style.clipPath = "path('M183.28 53.8397H4.00715C0.719309 53.8397 -1.16446 50.0934 0.796309 47.4543L34.8527 1.61452C35.6074 0.598765 36.7982 0 38.0636 0H206.052C208.261 0 210.052 1.79086 210.052 4V21.5883C210.052 22.5016 209.74 23.3875 209.166 24.0986L186.394 52.35C185.635 53.2921 184.49 53.8397 183.28 53.8397Z')";
+        svgRight.setAttribute('width', 211);
+        svgRight.setAttribute('height', 54);
+        svgRight.setAttribute('viewBox', '0 0 211 54');
+        svgRight.querySelector('path').setAttribute('d', 'M183.28 53.8397H4.00715C0.719309 53.8397 -1.16446 50.0934 0.796309 47.4543L34.8527 1.61452C35.6074 0.598765 36.7982 0 38.0636 0H206.052C208.261 0 210.052 1.79086 210.052 4V21.5883C210.052 22.5016 209.74 23.3875 209.166 24.0986L186.394 52.35C185.635 53.2921 184.49 53.8397 183.28 53.8397Z');
+
+        // Desktop contact button — restore original
+        topContact.style.width = '152px';
+        topContact.style.height = '46px';
+        topSvg.setAttribute('width', 152);
+        topSvg.setAttribute('height', 46);
+        topSvg.setAttribute('viewBox', '0 0 152 46');
+        topPath.setAttribute('d', 'M150.411 29.5813C146.255 25.2436 131.102 9.58704 120.662 0.898338C119.958 0.31186 119.069 0 118.152 0H4C1.79086 0 0 1.79086 0 4V42C0 44.2091 1.79086 46 4 46H147.5C149.709 46 151.5 44.2091 151.5 42V32.3165C151.5 31.2929 151.119 30.3204 150.411 29.5813Z');
+      }
+    }
+
+    updateMobileButtons();
+    window.addEventListener('resize', updateMobileButtons);
 
     function updateFrame() {
       const frame = document.querySelector('.frame');
