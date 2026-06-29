@@ -80,11 +80,7 @@ body {
 }
 
 .hero-char {
-  background: linear-gradient(to bottom, #FFFFFF, #BDBDBD);
-  background-size: 100% 300%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: #ffffff;
   opacity: 0;
   font-family: 'Hashgraph', sans-serif;
 }
@@ -92,10 +88,6 @@ body {
 .hero-char.is-space {
   white-space: pre;
 }
-
-.hero-char:is(.hero-line:nth-child(1) *) { background-position: 0 0%; }
-.hero-char:is(.hero-line:nth-child(2) *) { background-position: 0 50%; }
-.hero-char:is(.hero-line:nth-child(3) *) { background-position: 0 100%; }
 
 /* Logo */
 .logo {
