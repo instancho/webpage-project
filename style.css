@@ -66,6 +66,7 @@ body {
   left: 50%;
   transform: translateX(-50%);
   width: max-content;
+  filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.6));
 }
 
 .hero-line {
