@@ -571,6 +571,10 @@ body {
   background: #0a0a0a;
 }
 
+#about {
+  height: 600vh;
+}
+
 /* Mobile responsive */
 @media (max-width: 768px) {
   .frame {

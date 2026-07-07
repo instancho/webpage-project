@@ -207,21 +207,17 @@
 
     // Frame sequence with GSAP ScrollTrigger
     (function() {
-      const TOTAL_FRAMES = 300;
-      const canvas = document.getElementById('frame-canvas');
-      const ctx = canvas.getContext('2d');
-      const frames = [];
-      let loaded = 0;
-      let currentFrame = -1;
+      var canvas = document.getElementById('frame-canvas');
+      var ctx = canvas.getContext('2d');
+      var currentImg = null;
 
       function padNum(n) { return String(n).padStart(4, '0'); }
 
-      function drawFrame(index) {
-        if (index === currentFrame) return;
-        if (!frames[index] || !frames[index].complete) return;
-        currentFrame = index;
+      function drawImage(img) {
+        if (img === currentImg) return;
+        if (!img || !img.complete) return;
+        currentImg = img;
 
-        var img = frames[index];
         var iw = img.naturalWidth, ih = img.naturalHeight;
         var cw = canvas.width, ch = canvas.height;
         var imgRatio = iw / ih;
@@ -229,15 +225,9 @@
         var sx, sy, sw, sh;
 
         if (canvasRatio > imgRatio) {
-          sw = iw;
-          sh = iw / canvasRatio;
-          sx = 0;
-          sy = (ih - sh) / 2;
+          sw = iw; sh = iw / canvasRatio; sx = 0; sy = (ih - sh) / 2;
         } else {
-          sh = ih;
-          sw = ih * canvasRatio;
-          sx = (iw - sw) / 2;
-          sy = 0;
+          sh = ih; sw = ih * canvasRatio; sx = (iw - sw) / 2; sy = 0;
         }
 
         ctx.drawImage(img, sx, sy, sw, sh, 0, 0, cw, ch);
@@ -246,22 +236,36 @@
       function resizeCanvas() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        currentFrame = -1;
-        drawFrame(0);
+        currentImg = null;
+        drawImage(heroFrames[0]);
       }
+
+      // Hero sequence: frames 1-300
+      var HERO_TOTAL = 300;
+      var heroFrames = [];
 
       var firstFrame = new Image();
       firstFrame.src = './assets/frames-webp/0001.webp';
       firstFrame.onload = function() {
-        frames[0] = firstFrame;
+        heroFrames[0] = firstFrame;
         resizeCanvas();
       };
-      frames.push(firstFrame);
+      heroFrames.push(firstFrame);
 
-      for (var i = 2; i <= TOTAL_FRAMES; i++) {
+      for (var i = 2; i <= HERO_TOTAL; i++) {
         var img = new Image();
         img.src = './assets/frames-webp/' + padNum(i) + '.webp';
-        frames.push(img);
+        heroFrames.push(img);
+      }
+
+      // About sequence: frames 301-750
+      var ABOUT_TOTAL = 450;
+      var aboutFrames = [];
+
+      for (var i = 301; i <= 750; i++) {
+        var img = new Image();
+        img.src = './assets/frames-webp/' + padNum(i) + '.webp';
+        aboutFrames.push(img);
       }
 
       window.addEventListener('resize', resizeCanvas);
@@ -272,8 +276,19 @@
         end: 'bottom bottom',
         scrub: 0.5,
         onUpdate: function(self) {
-          var frameIndex = Math.min(Math.floor(self.progress * TOTAL_FRAMES), TOTAL_FRAMES - 1);
-          drawFrame(frameIndex);
+          var frameIndex = Math.min(Math.floor(self.progress * HERO_TOTAL), HERO_TOTAL - 1);
+          drawImage(heroFrames[frameIndex]);
+        }
+      });
+
+      ScrollTrigger.create({
+        trigger: '#about',
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.5,
+        onUpdate: function(self) {
+          var frameIndex = Math.min(Math.floor(self.progress * ABOUT_TOTAL), ABOUT_TOTAL - 1);
+          drawImage(aboutFrames[frameIndex]);
         }
       });
     })();
