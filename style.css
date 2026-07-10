@@ -35,6 +35,15 @@ body {
   display: none;
 }
 
+.text-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(to bottom, transparent 30%, rgba(0, 0, 0, 0.55) 100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
 .frame {
   position: fixed;
   inset: 24px;
@@ -87,6 +96,107 @@ body {
 
 .hero-char.is-space {
   white-space: pre;
+}
+
+/* About text */
+.about-text {
+  position: fixed;
+  bottom: 15%;
+  left: 48px;
+  z-index: 4;
+  text-align: left;
+  pointer-events: none;
+  max-width: 540px;
+  filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.6));
+}
+
+.about-heading {
+  font-family: 'Hashgraph', sans-serif;
+  font-size: clamp(22px, 2.22vw, 32px);
+  font-weight: 600;
+  color: transparent;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+
+.about-body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: clamp(12px, 1.25vw, 18px);
+  font-weight: 400;
+  color: transparent;
+  line-height: 1.65;
+  margin: 0;
+}
+
+.about-char {
+  color: #ffffff;
+  opacity: 0;
+}
+
+.about-char.is-space {
+  white-space: pre-wrap;
+}
+
+/* Mission text */
+.mission-text {
+  position: fixed;
+  bottom: 20%;
+  left: 48px;
+  right: 48px;
+  z-index: 4;
+  text-align: left;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.6));
+}
+
+.mission-heading {
+  font-family: 'Hashgraph', sans-serif;
+  font-size: clamp(22px, 2.22vw, 32px);
+  font-weight: 600;
+  color: transparent;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  line-height: 1.2;
+  margin-bottom: 24px;
+}
+
+.mission-columns {
+  display: flex;
+  gap: 40px;
+}
+
+.mission-col {
+  flex: 1;
+}
+
+.mission-accent {
+  width: 100%;
+  height: 1.5px;
+  background: linear-gradient(to right, #F95303, transparent);
+  margin-bottom: 12px;
+  opacity: 0;
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+.mission-body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: clamp(12px, 1.25vw, 18px);
+  font-weight: 400;
+  color: transparent;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.mission-char {
+  color: #ffffff;
+  opacity: 0;
+}
+
+.mission-char.is-space {
+  white-space: pre-wrap;
 }
 
 /* Logo */
@@ -693,6 +803,50 @@ body {
     transform: translate(0, -50%);
     top: auto;
     left: 0;
+  }
+
+  /* About text */
+  .about-text {
+    bottom: 12%;
+    left: 80px;
+    right: 24px;
+    max-width: none;
+  }
+
+  .about-heading {
+    font-size: clamp(18px, 5.1vw, 26px);
+    margin-bottom: 10px;
+  }
+
+  .about-body {
+    font-size: clamp(10px, 2.87vw, 14px);
+  }
+
+  /* Mission text */
+  .mission-text {
+    bottom: 8%;
+    left: 24px;
+    right: 24px;
+  }
+
+  .mission-heading {
+    font-size: clamp(18px, 5.1vw, 26px);
+    margin-bottom: 16px;
+  }
+
+  .mission-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 20px;
+  }
+
+  .mission-body {
+    font-size: clamp(9px, 2.5vw, 12px);
+  }
+
+  .mission-accent {
+    width: 24px;
+    margin-bottom: 8px;
   }
 
   /* Hero text */

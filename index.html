@@ -187,7 +187,35 @@
     </div>
   </section>
 
-  <section id="about" class="page-section"></section>
+  <section id="about" class="page-section">
+    <div class="text-overlay"></div>
+    <div class="about-text">
+      <div class="about-heading about-line">OUR VISION.</div>
+      <p class="about-body about-line">By 2035, we will make Chinese food products a global benchmark for trust through innovation, ensuring quality, traceability, and fair partnerships while empowering Chinese businesses and communities to thrive sustainably in global markets.</p>
+    </div>
+
+    <div class="mission-text">
+      <div class="mission-heading mission-line">OUR MISSION.</div>
+      <div class="mission-columns">
+        <div class="mission-col">
+          <div class="mission-accent"></div>
+          <p class="mission-body mission-line">Use advanced technology to build smart, connected food networks.</p>
+        </div>
+        <div class="mission-col">
+          <div class="mission-accent"></div>
+          <p class="mission-body mission-line">Connect producers with the right global partners through smart trade.</p>
+        </div>
+        <div class="mission-col">
+          <div class="mission-accent"></div>
+          <p class="mission-body mission-line">Empower Chinese businesses and communities with global opportunities.</p>
+        </div>
+        <div class="mission-col">
+          <div class="mission-accent"></div>
+          <p class="mission-body mission-line">Ensure supply chain traceability so customers trust every product's origin and journey.</p>
+        </div>
+      </div>
+    </div>
+  </section>
   <section id="products" class="page-section"></section>
   <section id="reach" class="page-section"></section>
   <section id="contact" class="page-section"></section>
@@ -380,6 +408,253 @@
             });
           }
         });
+      });
+    })();
+
+    // About text — letter by letter reveal
+    (function() {
+      var aboutText = document.querySelector('.about-text');
+      var overlay = document.querySelector('.text-overlay');
+      var allChars = [];
+
+      aboutText.querySelectorAll('.about-line').forEach(function(line) {
+        var isHeading = line.classList.contains('about-heading');
+        var text = line.textContent;
+        line.textContent = '';
+        for (var c = 0; c < text.length; c++) {
+          var span = document.createElement('span');
+          span.textContent = text[c];
+          var classes = ['about-char'];
+          if (text[c] === ' ') classes.push('is-space');
+          if (isHeading && text[c] === '.') classes.push('is-dot');
+          span.className = classes.join(' ');
+          line.appendChild(span);
+          allChars.push(span);
+        }
+      });
+
+      var totalChars = allChars.length;
+
+      // Frame 506 = about index 205, frame 570 = about index 269
+      var animStart = (506 - 301) / 450;
+      var animEnd = (570 - 301) / 450;
+      var revealEnd = animStart + (animEnd - animStart) * 0.65;
+      var holdEnd = animStart + (animEnd - animStart) * 0.80;
+
+      ScrollTrigger.create({
+        trigger: '#about',
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.15,
+        onUpdate: function(self) {
+          var p = self.progress;
+
+          // Overlay fade
+          var fadeIn = animStart + (animEnd - animStart) * 0.12;
+          var fadeOut = animEnd - (animEnd - animStart) * 0.12;
+          if (p < animStart || p >= animEnd) {
+            overlay.style.opacity = '0';
+            allChars.forEach(function(ch) { ch.style.opacity = '0'; });
+            return;
+          } else if (p < fadeIn) {
+            overlay.style.opacity = ((p - animStart) / (fadeIn - animStart)).toFixed(3);
+          } else if (p > fadeOut) {
+            overlay.style.opacity = ((animEnd - p) / (animEnd - fadeOut)).toFixed(3);
+          } else {
+            overlay.style.opacity = '1';
+          }
+
+          // Reveal phase
+          if (p < revealEnd) {
+            var revealProgress = (p - animStart) / (revealEnd - animStart);
+            var visibleCount = Math.floor(revealProgress * totalChars);
+            allChars.forEach(function(ch, i) {
+              if (i < visibleCount - 1) {
+                ch.style.opacity = '1';
+                ch.style.color = ch.classList.contains('is-dot') ? '#F95303' : '#ffffff';
+              } else if (i === visibleCount - 1) {
+                ch.style.opacity = '1';
+                ch.style.color = '#F95303';
+              } else {
+                ch.style.opacity = '0';
+                ch.style.color = '#ffffff';
+              }
+            });
+            return;
+          }
+
+          // Hold phase
+          if (p < holdEnd) {
+            allChars.forEach(function(ch) {
+              ch.style.opacity = '1';
+              ch.style.color = ch.classList.contains('is-dot') ? '#F95303' : '#ffffff';
+            });
+            return;
+          }
+
+          // Exit phase
+          var exitProgress = (p - holdEnd) / (animEnd - holdEnd);
+          var hideCount = Math.floor(exitProgress * totalChars);
+          var lastVisible = totalChars - hideCount - 1;
+          allChars.forEach(function(ch, i) {
+            if (i < lastVisible) {
+              ch.style.opacity = '1';
+              ch.style.color = ch.classList.contains('is-dot') ? '#F95303' : '#ffffff';
+            } else if (i === lastVisible) {
+              ch.style.opacity = '1';
+              ch.style.color = '#F95303';
+            } else {
+              ch.style.opacity = '0';
+              ch.style.color = '#ffffff';
+            }
+          });
+        }
+      });
+    })();
+
+    // Mission text — letter by letter reveal with accent lines
+    (function() {
+      var missionText = document.querySelector('.mission-text');
+      var overlay = document.querySelector('.text-overlay');
+      var allChars = [];
+      var accents = missionText.querySelectorAll('.mission-accent');
+      var colStartIndices = [];
+
+      // Split heading into chars
+      var heading = missionText.querySelector('.mission-heading');
+      var headingText = heading.textContent;
+      heading.textContent = '';
+      for (var c = 0; c < headingText.length; c++) {
+        var span = document.createElement('span');
+        span.textContent = headingText[c];
+        var classes = ['mission-char'];
+        if (headingText[c] === ' ') classes.push('is-space');
+        if (headingText[c] === '.') classes.push('is-dot');
+        span.className = classes.join(' ');
+        heading.appendChild(span);
+        allChars.push(span);
+      }
+
+      // Split each column body into chars
+      missionText.querySelectorAll('.mission-body').forEach(function(body) {
+        colStartIndices.push(allChars.length);
+        var text = body.textContent;
+        body.textContent = '';
+        for (var c = 0; c < text.length; c++) {
+          var span = document.createElement('span');
+          span.textContent = text[c];
+          var classes = ['mission-char'];
+          if (text[c] === ' ') classes.push('is-space');
+          span.className = classes.join(' ');
+          body.appendChild(span);
+          allChars.push(span);
+        }
+      });
+
+      var totalChars = allChars.length;
+
+      var colEndIndices = [];
+      for (var a = 0; a < colStartIndices.length; a++) {
+        colEndIndices.push(a < colStartIndices.length - 1 ? colStartIndices[a + 1] - 1 : totalChars - 1);
+      }
+
+      // Frame 600 = about index 299, frame 735 = about index 434
+      var animStart = (600 - 301) / 450;
+      var animEnd = (735 - 301) / 450;
+      var revealEnd = animStart + (animEnd - animStart) * 0.65;
+      var holdEnd = animStart + (animEnd - animStart) * 0.80;
+
+      function updateAccents(lastVisibleIndex) {
+        for (var a = 0; a < accents.length; a++) {
+          var colStart = colStartIndices[a];
+          var colEnd = colEndIndices[a];
+          var colChars = colEnd - colStart + 1;
+          if (lastVisibleIndex < colStart) {
+            accents[a].style.opacity = '0';
+            accents[a].style.transform = 'scaleX(0)';
+          } else if (lastVisibleIndex >= colEnd) {
+            accents[a].style.opacity = '1';
+            accents[a].style.transform = 'scaleX(1)';
+          } else {
+            accents[a].style.opacity = '1';
+            var progress = (lastVisibleIndex - colStart + 1) / colChars;
+            accents[a].style.transform = 'scaleX(' + progress.toFixed(3) + ')';
+          }
+        }
+      }
+
+      ScrollTrigger.create({
+        trigger: '#about',
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.15,
+        onUpdate: function(self) {
+          var p = self.progress;
+
+          // Overlay fade
+          var fadeIn = animStart + (animEnd - animStart) * 0.08;
+          var fadeOut = animEnd - (animEnd - animStart) * 0.08;
+          if (p < animStart || p >= animEnd) {
+            overlay.style.opacity = '0';
+            allChars.forEach(function(ch) { ch.style.opacity = '0'; });
+            accents.forEach(function(a) { a.style.opacity = '0'; a.style.transform = 'scaleX(0)'; });
+            return;
+          } else if (p < fadeIn) {
+            overlay.style.opacity = ((p - animStart) / (fadeIn - animStart)).toFixed(3);
+          } else if (p > fadeOut) {
+            overlay.style.opacity = ((animEnd - p) / (animEnd - fadeOut)).toFixed(3);
+          } else {
+            overlay.style.opacity = '1';
+          }
+
+          // Reveal phase
+          if (p < revealEnd) {
+            var revealProgress = (p - animStart) / (revealEnd - animStart);
+            var visibleCount = Math.floor(revealProgress * totalChars);
+            allChars.forEach(function(ch, i) {
+              if (i < visibleCount - 1) {
+                ch.style.opacity = '1';
+                ch.style.color = ch.classList.contains('is-dot') ? '#F95303' : '#ffffff';
+              } else if (i === visibleCount - 1) {
+                ch.style.opacity = '1';
+                ch.style.color = '#F95303';
+              } else {
+                ch.style.opacity = '0';
+                ch.style.color = '#ffffff';
+              }
+            });
+            updateAccents(visibleCount - 1);
+            return;
+          }
+
+          // Hold phase
+          if (p < holdEnd) {
+            allChars.forEach(function(ch) {
+              ch.style.opacity = '1';
+              ch.style.color = ch.classList.contains('is-dot') ? '#F95303' : '#ffffff';
+            });
+            updateAccents(totalChars - 1);
+            return;
+          }
+
+          // Exit phase
+          var exitProgress = (p - holdEnd) / (animEnd - holdEnd);
+          var hideCount = Math.floor(exitProgress * totalChars);
+          var lastVisible = totalChars - hideCount - 1;
+          allChars.forEach(function(ch, i) {
+            if (i < lastVisible) {
+              ch.style.opacity = '1';
+              ch.style.color = ch.classList.contains('is-dot') ? '#F95303' : '#ffffff';
+            } else if (i === lastVisible) {
+              ch.style.opacity = '1';
+              ch.style.color = '#F95303';
+            } else {
+              ch.style.opacity = '0';
+              ch.style.color = '#ffffff';
+            }
+          });
+          updateAccents(lastVisible);
+        }
       });
     })();
 
