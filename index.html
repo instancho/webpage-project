@@ -286,11 +286,11 @@
         heroFrames.push(img);
       }
 
-      // About sequence: frames 301-750
-      var ABOUT_TOTAL = 450;
+      // About sequence: frames 301-840
+      var ABOUT_TOTAL = 540;
       var aboutFrames = [];
 
-      for (var i = 301; i <= 750; i++) {
+      for (var i = 301; i <= 840; i++) {
         var img = new Image();
         img.src = './assets/frames-webp/' + padNum(i) + '.webp';
         aboutFrames.push(img);
@@ -436,8 +436,8 @@
       var totalChars = allChars.length;
 
       // Frame 506 = about index 205, frame 570 = about index 269
-      var animStart = (506 - 301) / 450;
-      var animEnd = (570 - 301) / 450;
+      var animStart = (506 - 301) / 540;
+      var animEnd = (570 - 301) / 540;
       var revealEnd = animStart + (animEnd - animStart) * 0.65;
       var holdEnd = animStart + (animEnd - animStart) * 0.80;
 
@@ -559,8 +559,8 @@
       }
 
       // Frame 600 = about index 299, frame 735 = about index 434
-      var animStart = (600 - 301) / 450;
-      var animEnd = (735 - 301) / 450;
+      var animStart = (600 - 301) / 540;
+      var animEnd = (735 - 301) / 540;
       var revealEnd = animStart + (animEnd - animStart) * 0.65;
       var holdEnd = animStart + (animEnd - animStart) * 0.80;
 
