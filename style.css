@@ -685,6 +685,44 @@ body {
   height: 720vh;
 }
 
+#products {
+  height: 200vh;
+}
+
+#products-3d {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  background: #000;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  contain: strict;
+}
+
+#products-3d canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+#reach {
+  height: 320vh;
+  position: relative;
+  z-index: 3;
+}
+
+#globe-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  display: block;
+  background: #000;
+}
+
 /* Mobile responsive */
 @media (max-width: 768px) {
   .frame {

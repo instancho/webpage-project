@@ -6,6 +6,14 @@
   <title>Landing Page</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://unpkg.com/lenis@1/dist/lenis.css">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.184.0/examples/jsm/"
+    }
+  }
+  </script>
 </head>
 <body>
   <!-- Noise filter for glass texture -->
@@ -216,8 +224,11 @@
       </div>
     </div>
   </section>
+  <div id="products-3d"></div>
   <section id="products" class="page-section"></section>
-  <section id="reach" class="page-section"></section>
+  <section id="reach" class="page-section">
+    <canvas id="globe-canvas"></canvas>
+  </section>
   <section id="contact" class="page-section"></section>
 
   <script src="https://unpkg.com/lenis@1/dist/lenis.min.js"></script>
@@ -318,6 +329,81 @@
           var frameIndex = Math.min(Math.floor(self.progress * ABOUT_TOTAL), ABOUT_TOTAL - 1);
           drawImage(aboutFrames[frameIndex]);
         }
+      });
+    })();
+
+    // Globe frame sequence
+    (function() {
+      var canvas = document.getElementById('globe-canvas');
+      var ctx = canvas.getContext('2d');
+      var currentImg = null;
+      var GLOBE_TOTAL = 120;
+      var globeFrames = [];
+
+      function padNum(n) { return String(n).padStart(4, '0'); }
+
+      function drawGlobe(img) {
+        if (img === currentImg) return;
+        if (!img || !img.complete) return;
+        currentImg = img;
+        var iw = img.naturalWidth, ih = img.naturalHeight;
+        var cw = canvas.width, ch = canvas.height;
+        var imgRatio = iw / ih, canvasRatio = cw / ch;
+        var sx, sy, sw, sh;
+        if (canvasRatio > imgRatio) {
+          sw = iw; sh = iw / canvasRatio; sx = 0; sy = (ih - sh) / 2;
+        } else {
+          sh = ih; sw = ih * canvasRatio; sx = (iw - sw) / 2; sy = 0;
+        }
+        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, cw, ch);
+      }
+
+      function resizeGlobeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        currentImg = null;
+        if (globeFrames[0] && globeFrames[0].complete) drawGlobe(globeFrames[0]);
+      }
+
+      for (var i = 1; i <= GLOBE_TOTAL; i++) {
+        var img = new Image();
+        img.src = './assets/globe-webp/' + padNum(i) + '.webp';
+        globeFrames.push(img);
+      }
+
+      canvas.style.visibility = 'hidden';
+      canvas.style.opacity = '0';
+      resizeGlobeCanvas();
+      window.addEventListener('resize', resizeGlobeCanvas);
+
+      ScrollTrigger.create({
+        trigger: '#reach',
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.5,
+        onUpdate: function(self) {
+          var frameIndex = Math.min(Math.floor(self.progress * GLOBE_TOTAL), GLOBE_TOTAL - 1);
+          drawGlobe(globeFrames[frameIndex]);
+        }
+      });
+
+      ScrollTrigger.create({
+        trigger: '#reach',
+        start: 'top bottom',
+        end: 'bottom top',
+        onUpdate: function(self) {
+          var p = self.progress;
+          var fadeIn = 0.08, fadeOut = 0.92;
+          var opacity;
+          if (p < fadeIn) opacity = p / fadeIn;
+          else if (p > fadeOut) opacity = (1 - p) / (1 - fadeOut);
+          else opacity = 1;
+          canvas.style.opacity = opacity;
+        },
+        onEnter: function() { canvas.style.visibility = 'visible'; },
+        onLeave: function() { canvas.style.visibility = 'hidden'; },
+        onEnterBack: function() { canvas.style.visibility = 'visible'; },
+        onLeaveBack: function() { canvas.style.visibility = 'hidden'; },
       });
     })();
 
@@ -1215,5 +1301,6 @@
       });
     });
   </script>
+  <script type="module" src="./container-scene.js"></script>
 </body>
 </html>
