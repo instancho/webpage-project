@@ -142,7 +142,7 @@ body {
 /* Mission text */
 .mission-text {
   position: fixed;
-  bottom: 20%;
+  bottom: 26%;
   left: 48px;
   right: 48px;
   z-index: 4;
