@@ -224,12 +224,88 @@
       </div>
     </div>
   </section>
-  <div id="products-3d"></div>
-  <section id="products" class="page-section"></section>
-  <section id="reach" class="page-section">
-    <canvas id="globe-canvas"></canvas>
+  <section id="product-globe" class="page-section">
+    <canvas id="product-globe-canvas"></canvas>
   </section>
-  <section id="contact" class="page-section"></section>
+  <section id="contact" class="contact-section">
+    <div class="office-scene">
+      <canvas id="office-canvas"></canvas>
+      <div class="office-overlay" aria-hidden="true"></div>
+      <div class="contact-overlay">
+        <div class="contact-content">
+          <!-- Contact info bar -->
+          <div class="contact-info-bar glass-contact-el liquid-glass">
+            <div class="liquid-specular"></div>
+            <div class="liquid-tint"></div>
+            <span>EMAIL@YIWUANCHANG.COM</span>
+            <span class="contact-info-divider">|</span>
+            <span>+86 952325 92384</span>
+          </div>
+
+          <!-- Social icons -->
+          <div class="contact-socials">
+            <a href="#" class="contact-social-btn glass-contact-el liquid-glass" aria-label="WeChat">
+              <div class="liquid-specular"></div>
+              <div class="liquid-tint"></div>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8.5 11a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm4 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" fill="white"/>
+                <path d="M16.5 14.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3.5 0a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" fill="white"/>
+                <path d="M9.5 2C5.36 2 2 4.92 2 8.5c0 2.05 1.1 3.88 2.82 5.1L4 16l2.83-1.42c.86.28 1.77.42 2.67.42.33 0 .66-.02.98-.06A6.45 6.45 0 0 1 10 13c0-3.58 3.36-6.5 7.5-6.5.33 0 .66.02.98.06C17.67 3.88 13.92 2 9.5 2Z" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M22 13c0-2.76-2.69-5-6-5s-6 2.24-6 5 2.69 5 6 5c.7 0 1.37-.1 2-.28L20 19l-.6-1.8C20.86 16.12 22 14.66 22 13Z" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <a href="#" class="contact-social-btn glass-contact-el liquid-glass" aria-label="LinkedIn">
+              <div class="liquid-specular"></div>
+              <div class="liquid-tint"></div>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6ZM2 9h4v12H2ZM4 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <a href="#" class="contact-social-btn glass-contact-el liquid-glass" aria-label="Email">
+              <div class="liquid-specular"></div>
+              <div class="liquid-tint"></div>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="4" width="20" height="16" rx="2" stroke="white" stroke-width="1.5"/>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
+
+          <!-- Contact form -->
+          <form class="contact-form" onsubmit="event.preventDefault()">
+            <div class="contact-row-full">
+              <div class="contact-input-wrap glass-contact-el liquid-glass">
+                <div class="liquid-specular"></div>
+                <div class="liquid-tint"></div>
+                <input type="text" name="name" class="contact-input" autocomplete="name" spellcheck="false" placeholder="YOUR NAME">
+              </div>
+            </div>
+            <div class="contact-row-half">
+              <div class="contact-input-wrap glass-contact-el liquid-glass">
+                <div class="liquid-specular"></div>
+                <div class="liquid-tint"></div>
+                <input type="text" name="company" class="contact-input" autocomplete="organization" spellcheck="false" placeholder="YOUR COMPANY">
+              </div>
+              <div class="contact-input-wrap glass-contact-el liquid-glass">
+                <div class="liquid-specular"></div>
+                <div class="liquid-tint"></div>
+                <input type="email" name="email" class="contact-input" autocomplete="email" spellcheck="false" placeholder="YOUR EMAIL">
+              </div>
+            </div>
+            <div class="contact-row-full">
+              <div class="contact-input-wrap glass-contact-el liquid-glass">
+                <div class="liquid-specular"></div>
+                <div class="liquid-tint"></div>
+                <textarea name="message" class="contact-input contact-textarea" autocomplete="off" placeholder="YOUR MESSAGE" rows="4"></textarea>
+              </div>
+            </div>
+            <button type="submit" class="contact-submit">SUBMIT</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="contact-edge" aria-hidden="true"></div>
+  </section>
 
   <script src="https://unpkg.com/lenis@1/dist/lenis.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
@@ -243,6 +319,10 @@
     gsap.ticker.lagSmoothing(0);
 
     gsap.registerPlugin(ScrollTrigger);
+
+    // Global tracking for progress bar — updated by each ScrollTrigger's scrubbed progress
+    var activeZone = 'hero';   // which trigger is active
+    var zoneProgress = 0;      // scrubbed progress within that trigger
 
     // Frame sequence with GSAP ScrollTrigger
     (function() {
@@ -317,6 +397,8 @@
         onUpdate: function(self) {
           var frameIndex = Math.min(Math.floor(self.progress * HERO_TOTAL), HERO_TOTAL - 1);
           drawImage(heroFrames[frameIndex]);
+          activeZone = 'hero'; zoneProgress = self.progress;
+          scheduleProgress();
         }
       });
 
@@ -328,21 +410,24 @@
         onUpdate: function(self) {
           var frameIndex = Math.min(Math.floor(self.progress * ABOUT_TOTAL), ABOUT_TOTAL - 1);
           drawImage(aboutFrames[frameIndex]);
+          activeZone = 'about'; zoneProgress = self.progress;
+          scheduleProgress();
         }
       });
     })();
 
-    // Globe frame sequence
+
+    // Product + Globe sequence
     (function() {
-      var canvas = document.getElementById('globe-canvas');
+      var canvas = document.getElementById('product-globe-canvas');
       var ctx = canvas.getContext('2d');
       var currentImg = null;
-      var GLOBE_TOTAL = 120;
-      var globeFrames = [];
+      var PG_TOTAL = 254;
+      var pgFrames = [];
 
       function padNum(n) { return String(n).padStart(4, '0'); }
 
-      function drawGlobe(img) {
+      function drawPG(img) {
         if (img === currentImg) return;
         if (!img || !img.complete) return;
         currentImg = img;
@@ -358,37 +443,39 @@
         ctx.drawImage(img, sx, sy, sw, sh, 0, 0, cw, ch);
       }
 
-      function resizeGlobeCanvas() {
+      function resizePGCanvas() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         currentImg = null;
-        if (globeFrames[0] && globeFrames[0].complete) drawGlobe(globeFrames[0]);
+        if (pgFrames[0] && pgFrames[0].complete) drawPG(pgFrames[0]);
       }
 
-      for (var i = 1; i <= GLOBE_TOTAL; i++) {
+      for (var i = 1; i <= PG_TOTAL; i++) {
         var img = new Image();
-        img.src = './assets/globe-webp/' + padNum(i) + '.webp';
-        globeFrames.push(img);
+        img.src = './assets/product-globe-webp/' + padNum(i) + '.webp';
+        pgFrames.push(img);
       }
 
       canvas.style.visibility = 'hidden';
       canvas.style.opacity = '0';
-      resizeGlobeCanvas();
-      window.addEventListener('resize', resizeGlobeCanvas);
+      resizePGCanvas();
+      window.addEventListener('resize', resizePGCanvas);
 
       ScrollTrigger.create({
-        trigger: '#reach',
+        trigger: '#product-globe',
         start: 'top top',
         end: 'bottom bottom',
         scrub: 0.5,
         onUpdate: function(self) {
-          var frameIndex = Math.min(Math.floor(self.progress * GLOBE_TOTAL), GLOBE_TOTAL - 1);
-          drawGlobe(globeFrames[frameIndex]);
+          var frameIndex = Math.min(Math.floor(self.progress * PG_TOTAL), PG_TOTAL - 1);
+          drawPG(pgFrames[frameIndex]);
+          activeZone = 'pg'; zoneProgress = self.progress;
+          scheduleProgress();
         }
       });
 
       ScrollTrigger.create({
-        trigger: '#reach',
+        trigger: '#product-globe',
         start: 'top bottom',
         end: 'bottom top',
         onUpdate: function(self) {
@@ -898,64 +985,116 @@
     window.addEventListener('resize', positionMarkers);
     setTimeout(positionMarkers, 100);
 
-    // Scroll-driven progress bar with GSAP
-    ScrollTrigger.create({
-      trigger: document.documentElement,
-      start: 'top top',
-      end: 'bottom bottom',
-      scrub: 0.3,
-      onUpdate: function(self) {
-        var progress = self.progress;
-        var markers = document.querySelectorAll('.progress-marker');
-        var fill = document.querySelector('.progress-fill');
+    // Section tracking + progress bar
+    // Driven by the scrubbed ScrollTrigger progress (not raw scrollY),
+    // so the bar stays perfectly in sync with the frame animations.
+    //
+    //   hero  progress 0-1          → Home     (frames 1-300)
+    //   about progress 0 to 30/540  → Home     (frames 301-330)
+    //   about progress 30/540 to 1  → About    (frames 331-840)
+    //   pg    progress 0 to 160/254 → Products (frames 1-160)
+    //   pg    progress 160/254 to 1 → Reach    (frames 161-254)
+    //   past pg                     → Contact
 
-        if (markers.length < 2) return;
+    var navBtnsAll = document.querySelectorAll('.nav-btn');
+    var contactEl = document.getElementById('contact');
 
-        if (isMobile()) {
-          var firstTop = parseFloat(markers[0].style.top) - 2.5;
-          var lastTop = parseFloat(markers[markers.length - 1].style.top) + 2.5;
-          var totalHeight = lastTop - firstTop;
+    function updateProgressBar() {
+      // Determine active section + normalized progress (0-1, each section = 1/5)
+      var activeIdx = 0;
+      var progress = 0;
 
-          fill.style.top = firstTop + 'px';
-          fill.style.width = '';
-          fill.style.height = (totalHeight * progress) + 'px';
+      // 5 markers = 4 gaps, so each section maps to 1/4 of the bar.
+      // Fill reaches marker N exactly when section N begins.
+      var G = 4;
 
-          var fillBottom = firstTop + totalHeight * progress;
-          markers.forEach(function(marker) {
-            var markerTop = parseFloat(marker.style.top) - 2.5;
-            if (fillBottom >= markerTop) {
-              marker.classList.add('active');
-            } else {
-              marker.classList.remove('active');
-            }
-          });
+      if (activeZone === 'hero') {
+        activeIdx = 0;
+        progress = (0 + zoneProgress) / G;
+
+      } else if (activeZone === 'about') {
+        var aboutHomeCut = 30 / 540;
+        if (zoneProgress < aboutHomeCut) {
+          activeIdx = 0;
+          progress = (0 + (1 + zoneProgress / aboutHomeCut * 0)) / G;
+          progress = 1 / G;
         } else {
-          var firstLeft = parseFloat(markers[0].style.left) - 2.5;
-          var lastLeft = parseFloat(markers[markers.length - 1].style.left) + 2.5;
-          var totalWidth = lastLeft - firstLeft;
-
-          fill.style.left = firstLeft + 'px';
-          fill.style.height = '';
-          fill.style.width = (totalWidth * progress) + 'px';
-
-          var fillRight = firstLeft + totalWidth * progress;
-          markers.forEach(function(marker) {
-            var markerLeft = parseFloat(marker.style.left) - 2.5;
-            if (fillRight >= markerLeft) {
-              marker.classList.add('active');
-            } else {
-              marker.classList.remove('active');
-            }
-          });
+          activeIdx = 1;
+          var aboutLocal = (zoneProgress - aboutHomeCut) / (1 - aboutHomeCut);
+          progress = (1 + aboutLocal) / G;
         }
 
-        var sections = ['home', 'about', 'products', 'reach', 'contact'];
-        var activeIndex = Math.min(Math.floor(progress * sections.length), sections.length - 1);
-        document.querySelectorAll('.nav-btn').forEach(function(btn, i) {
-          btn.classList.toggle('active', i === activeIndex);
+      } else if (activeZone === 'pg') {
+        var pgProductsCut = 160 / 254;
+        if (zoneProgress < pgProductsCut) {
+          activeIdx = 2;
+          var prodLocal = zoneProgress / pgProductsCut;
+          progress = (2 + prodLocal) / G;
+        } else {
+          activeIdx = 3;
+          var reachLocal = (zoneProgress - pgProductsCut) / (1 - pgProductsCut);
+          progress = (3 + reachLocal) / G;
+        }
+      }
+
+      // Contact override — when contact section scrolls into view
+      var cRect = contactEl.getBoundingClientRect();
+      if (cRect.top < window.innerHeight * 0.5) {
+        activeIdx = 4;
+        progress = 1;
+      }
+
+      progress = Math.min(1, Math.max(0, progress));
+
+      navBtnsAll.forEach(function(btn, i) {
+        btn.classList.toggle('active', i === activeIdx);
+      });
+
+      var markers = document.querySelectorAll('.progress-marker');
+      var fill = document.querySelector('.progress-fill');
+      if (markers.length < 2) return;
+
+      if (isMobile()) {
+        var firstTop = parseFloat(markers[0].style.top) - 2.5;
+        var lastTop = parseFloat(markers[markers.length - 1].style.top) + 2.5;
+        var totalHeight = lastTop - firstTop;
+
+        fill.style.top = firstTop + 'px';
+        fill.style.width = '';
+        fill.style.height = (totalHeight * progress) + 'px';
+
+        var fillBottom = firstTop + totalHeight * progress;
+        markers.forEach(function(marker) {
+          var markerTop = parseFloat(marker.style.top) - 2.5;
+          marker.classList.toggle('active', fillBottom >= markerTop);
+        });
+      } else {
+        var firstLeft = parseFloat(markers[0].style.left) - 2.5;
+        var lastLeft = parseFloat(markers[markers.length - 1].style.left) + 2.5;
+        var totalWidth = lastLeft - firstLeft;
+
+        fill.style.left = firstLeft + 'px';
+        fill.style.height = '';
+        fill.style.width = (totalWidth * progress) + 'px';
+
+        var fillRight = firstLeft + totalWidth * progress;
+        markers.forEach(function(marker) {
+          var markerLeft = parseFloat(marker.style.left) - 2.5;
+          marker.classList.toggle('active', fillRight >= markerLeft);
         });
       }
-    });
+    }
+
+    var progressRaf = 0;
+    function scheduleProgress() {
+      if (!progressRaf) progressRaf = requestAnimationFrame(function() {
+        progressRaf = 0;
+        updateProgressBar();
+      });
+    }
+    window.addEventListener('scroll', scheduleProgress, { passive: true });
+    window.addEventListener('resize', scheduleProgress);
+    setTimeout(updateProgressBar, 150);
 
     // Gradient shine animation on hover
     document.querySelectorAll('.glass-btn').forEach(btn => {
@@ -1259,8 +1398,8 @@
       });
     }
 
-    // Nav button border shine animation on hover
-    document.querySelectorAll('.glass-nav').forEach(btn => {
+    // Border shine animation on hover (nav buttons + contact glass elements)
+    document.querySelectorAll('.glass-nav, .glass-contact-el').forEach(btn => {
       const defaultAngle = 135;
       let current = defaultAngle;
       let target = defaultAngle;
@@ -1301,6 +1440,194 @@
       });
     });
   </script>
-  <script type="module" src="./container-scene.js"></script>
+
+  <!-- Office 3D scene + contact reveal -->
+  <script type="module">
+    import * as THREE from 'three';
+    import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+
+    const MOUSE_LERP = 0.018;
+    const MAX_PARALLAX = 0.18;
+    const CAMERA_PIVOT_Z = 0;
+    const CAMERA_LOOK_AT_Z = -2;
+
+    const TEXTURE_PATHS = [
+      './assets/room_texture_01.jpeg',
+      './assets/office_fbx_01/textures/furniture_texture.jpeg',
+      './assets/office_fbx_01/textures/ontable_texture.png',
+      './assets/office_fbx_01/textures/plant_texture.png',
+      './assets/office_fbx_01/textures/lapm_texture.png',
+    ];
+
+    function findTextureForObject(obj) {
+      let node = obj;
+      while (node) {
+        const name = (node.name || '').toLowerCase();
+        if (name.includes('room')) return TEXTURE_PATHS[0];
+        if (name.includes('furniture') || name.includes('sofa') || name.includes('chair') || name === 'table') return TEXTURE_PATHS[1];
+        if (name.includes('on_table') || name.includes('ontable')) return TEXTURE_PATHS[2];
+        if (name.includes('plant') || name.includes('vase')) return TEXTURE_PATHS[3];
+        if (name.includes('lamp')) return TEXTURE_PATHS[4];
+        node = node.parent;
+      }
+      return null;
+    }
+
+    (function() {
+      const canvas = document.getElementById('office-canvas');
+      const section = document.querySelector('.contact-section');
+      const edge = document.querySelector('.contact-edge');
+      const mobile = window.innerWidth <= 768 || matchMedia('(pointer: coarse)').matches;
+
+      // Three.js setup
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'high-performance' });
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.0;
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.shadowMap.enabled = !mobile;
+      renderer.shadowMap.type = THREE.PCFShadowMap;
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, mobile ? 1.5 : 2));
+      renderer.setClearColor(0x06080f);
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x06080f);
+
+      const camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.01, 200);
+      camera.position.set(0, 0, CAMERA_PIVOT_Z);
+
+      scene.add(new THREE.HemisphereLight(0xffffff, 0xffffff, 0.6));
+      scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+      const dir1 = new THREE.DirectionalLight(0xfff4e0, 1.2);
+      dir1.position.set(5, 8, 5);
+      scene.add(dir1);
+      const dir2 = new THREE.DirectionalLight(0xffffff, 0.5);
+      dir2.position.set(-5, 3, -3);
+      scene.add(dir2);
+
+      // Load textures
+      const textureLoader = new THREE.TextureLoader();
+      const textures = {};
+      TEXTURE_PATHS.forEach(p => {
+        const tex = textureLoader.load(p);
+        tex.colorSpace = THREE.SRGBColorSpace;
+        tex.wrapS = THREE.RepeatWrapping;
+        tex.wrapT = THREE.RepeatWrapping;
+        tex.anisotropy = 8;
+        textures[p] = tex;
+      });
+
+      // Load FBX
+      const fbxLoader = new FBXLoader();
+      fbxLoader.load('./assets/office_fbx_01/office_fbx.fbx', function(fbx) {
+        const box = new THREE.Box3().setFromObject(fbx);
+        const size = new THREE.Vector3();
+        box.getSize(size);
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const scale = maxDim > 0 ? 4 / maxDim : 1;
+        fbx.scale.setScalar(scale);
+        fbx.position.set(0, 0, 0);
+
+        fbx.traverse(function(child) {
+          if (!child.isMesh) return;
+          child.frustumCulled = false;
+          const texPath = findTextureForObject(child);
+          const texture = texPath ? textures[texPath] : null;
+          const hasAlpha = texPath ? texPath.endsWith('.png') : false;
+          child.material = new THREE.MeshBasicMaterial({
+            map: texture || null,
+            color: texture ? 0xffffff : 0xd8d2c8,
+            side: THREE.DoubleSide,
+            toneMapped: false,
+            transparent: hasAlpha,
+            alphaTest: hasAlpha ? 0.12 : 0,
+            depthWrite: !hasAlpha,
+          });
+        });
+
+        scene.add(fbx);
+      });
+
+      // Parallax camera
+      const mouseTarget = { x: 0, y: 0 };
+      const mouseCurrent = { x: 0, y: 0 };
+      if (!mobile) {
+        window.addEventListener('mousemove', function(e) {
+          mouseTarget.x = (e.clientX / window.innerWidth - 0.5) * MAX_PARALLAX;
+          mouseTarget.y = (e.clientY / window.innerHeight - 0.5) * -MAX_PARALLAX;
+        }, { passive: true });
+      }
+
+      // Resize
+      function resizeOffice() {
+        const w = canvas.clientWidth;
+        const h = canvas.clientHeight;
+        renderer.setSize(w, h, false);
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+      }
+      resizeOffice();
+      window.addEventListener('resize', resizeOffice);
+
+      // Visibility check
+      let sceneVisible = false;
+      const observer = new IntersectionObserver(function(entries) {
+        sceneVisible = entries[0].isIntersecting;
+      }, { threshold: 0.05 });
+      observer.observe(section);
+
+      // Render loop
+      function animate() {
+        requestAnimationFrame(animate);
+        if (!sceneVisible) return;
+
+        if (!mobile) {
+          mouseCurrent.x += (mouseTarget.x - mouseCurrent.x) * MOUSE_LERP;
+          mouseCurrent.y += (mouseTarget.y - mouseCurrent.y) * MOUSE_LERP;
+          camera.position.set(mouseCurrent.x, mouseCurrent.y, CAMERA_PIVOT_Z);
+          camera.lookAt(mouseCurrent.x * 0.08, mouseCurrent.y * 0.08, CAMERA_LOOK_AT_Z);
+        }
+
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      // Clip-path scroll reveal
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let revealRaf = 0;
+      let lastPath = '';
+
+      function updateReveal() {
+        revealRaf = 0;
+        const vh = window.innerHeight;
+        const rect = section.getBoundingClientRect();
+        const p = Math.min(1, Math.max(0, 1 - rect.top / vh));
+        const eased = reduceMotion.matches ? p : p * p * (3 - 2 * p);
+        const depth = (1 - eased) * 100;
+        const angle = reduceMotion.matches ? 0 : Math.sin(Math.PI * eased) * 18;
+        const y0 = Math.min(100, depth + angle * 0.35);
+        const y1 = Math.max(0, depth - angle * 0.45);
+        const y2 = Math.max(0, depth - angle * 0.45);
+        const y3 = Math.max(0, depth - angle);
+        const path = 'polygon(0% ' + y0 + '%, 43% ' + y1 + '%, 57% ' + y2 + '%, 100% ' + y3 + '%, 100% 100%, 0% 100%)';
+        if (path !== lastPath) {
+          lastPath = path;
+          section.style.clipPath = path;
+          section.style.setProperty('-webkit-clip-path', path);
+          if (edge) {
+            var t = 0.65;
+            edge.style.clipPath = 'polygon(0% ' + y0 + '%, 43% ' + y1 + '%, 57% ' + y2 + '%, 100% ' + y3 + '%, 100% ' + Math.min(100, y3 + t) + '%, 57% ' + Math.min(100, y2 + t) + '%, 43% ' + Math.min(100, y1 + t) + '%, 0% ' + Math.min(100, y0 + t) + '%)';
+          }
+        }
+      }
+
+      function scheduleReveal() {
+        if (!revealRaf) revealRaf = requestAnimationFrame(updateReveal);
+      }
+      updateReveal();
+      window.addEventListener('scroll', scheduleReveal, { passive: true });
+      window.addEventListener('resize', scheduleReveal);
+
+    })();
+  </script>
 </body>
 </html>

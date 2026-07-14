@@ -47,7 +47,7 @@ body {
 .frame {
   position: fixed;
   inset: 24px;
-  z-index: 5;
+  z-index: 50;
   pointer-events: none;
 }
 
@@ -142,7 +142,7 @@ body {
 /* Mission text */
 .mission-text {
   position: fixed;
-  bottom: 26%;
+  bottom: 18%;
   left: 48px;
   right: 48px;
   z-index: 4;
@@ -205,7 +205,7 @@ body {
   top: 40px;
   left: 40px;
   height: 41px;
-  z-index: 10;
+  z-index: 50;
 }
 
 .logo-mobile {
@@ -217,7 +217,7 @@ body {
   position: fixed;
   top: 40px;
   right: 200px;
-  z-index: 10;
+  z-index: 50;
 }
 
 .lang-btn {
@@ -283,7 +283,7 @@ body {
   position: fixed;
   top: 32px;
   right: 39px;
-  z-index: 10;
+  z-index: 50;
   width: 152px;
   height: 46px;
   border: none;
@@ -323,7 +323,7 @@ body {
   bottom: 32px;
   left: 32px;
   right: 32px;
-  z-index: 10;
+  z-index: 50;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -417,7 +417,17 @@ body {
   text-transform: uppercase;
   white-space: nowrap;
   box-shadow: 0px 3.3px 9.16px rgba(0, 0, 0, 0.39), inset 0 1px 2px rgba(0, 0, 0, 0.3), inset 0 -1px 1px rgba(255, 255, 255, 0.04);
-  transition: background 0.3s ease;
+  transition: background 0.3s ease, opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+}
+
+.nav-btn.active {
+  opacity: 1;
+}
+
+.nav-buttons:hover .nav-btn {
+  opacity: 1;
+  transition: background 0.3s ease, opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Glass nav buttons
@@ -520,7 +530,7 @@ body {
   left: 24px;
   right: 24px;
   height: 1.5px;
-  z-index: 11;
+  z-index: 51;
   display: flex;
   align-items: center;
 }
@@ -529,7 +539,7 @@ body {
   position: absolute;
   top: 0;
   height: 100%;
-  width: 20%;
+  width: 0;
   background: linear-gradient(to right, #ffffff calc(100% - 32px), transparent 100%);
   transition: width 0.3s ease;
 }
@@ -685,34 +695,13 @@ body {
   height: 720vh;
 }
 
-#products {
-  height: 200vh;
-}
-
-#products-3d {
-  position: fixed;
-  inset: 0;
-  z-index: 2;
-  background: #000;
-  pointer-events: none;
-  visibility: hidden;
-  opacity: 0;
-  contain: strict;
-}
-
-#products-3d canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-#reach {
-  height: 320vh;
+#product-globe {
+  height: 400vh;
   position: relative;
   z-index: 3;
 }
 
-#globe-canvas {
+#product-globe-canvas {
   position: fixed;
   top: 0;
   left: 0;
@@ -721,6 +710,255 @@ body {
   z-index: 1;
   display: block;
   background: #000;
+}
+
+/* Contact Section */
+.contact-section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  z-index: 40;
+  background: #06080f;
+  clip-path: polygon(0% 100%, 43% 100%, 57% 100%, 100% 100%, 100% 100%, 0% 100%);
+  -webkit-clip-path: polygon(0% 100%, 43% 100%, 57% 100%, 100% 100%, 100% 100%, 0% 100%);
+}
+
+.office-scene {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background: #06080f;
+}
+
+#office-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.office-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 45%, rgba(0,0,0,0.55) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.contact-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 2;
+  padding: clamp(24px, 5vw, 80px);
+  box-sizing: border-box;
+}
+
+.contact-content {
+  pointer-events: auto;
+  width: min(100%, 420px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Shared glass style for contact elements */
+.glass-contact-el {
+  position: relative;
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border-radius: 8px;
+  border: none;
+  box-shadow:
+    0px 3.3px 9.16px rgba(0, 0, 0, 0.39),
+    inset 0 1px 2px rgba(0, 0, 0, 0.3),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.04);
+  transition: box-shadow 200ms ease, background 200ms ease;
+}
+
+.glass-contact-el:hover,
+.glass-contact-el:focus-within {
+  background: rgba(0, 0, 0, 0.35);
+  box-shadow:
+    0px 3.3px 9.16px rgba(0, 0, 0, 0.39),
+    inset 0 1px 6px rgba(0, 0, 0, 0.35),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.04),
+    0 0 12px rgba(255, 255, 255, 0.08);
+}
+
+/* Conic-gradient border shine (same as nav buttons) */
+.glass-contact-el::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  padding: 0.75px;
+  background: conic-gradient(
+    from var(--shine-angle, 135deg),
+    rgba(255, 255, 255, 0.55) 0deg,
+    rgba(255, 255, 255, 0.1) 60deg,
+    rgba(255, 255, 255, 0.03) 120deg,
+    rgba(255, 255, 255, 0.03) 180deg,
+    rgba(255, 255, 255, 0.1) 300deg,
+    rgba(255, 255, 255, 0.55) 360deg
+  );
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  opacity: 0.6;
+}
+
+.glass-contact-el:hover::after,
+.glass-contact-el:focus-within::after {
+  opacity: 1;
+}
+
+/* Contact info bar */
+.contact-info-bar {
+  width: 100%;
+  padding: 14px 24px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #ffffff;
+  box-sizing: border-box;
+  font-family: 'Hashgraph', 'Aptos', 'Segoe UI', system-ui, sans-serif;
+}
+
+.contact-info-divider {
+  margin: 0 12px;
+  opacity: 0.5;
+}
+
+/* Social icons */
+.contact-socials {
+  display: flex;
+  gap: 14px;
+  width: 100%;
+}
+
+.contact-social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  height: 72px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.contact-social-btn svg {
+  opacity: 0.85;
+  transition: opacity 200ms ease;
+}
+
+.contact-social-btn:hover svg {
+  opacity: 1;
+}
+
+/* Contact form */
+.contact-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.contact-row-full {
+  width: 100%;
+}
+
+.contact-row-half {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.contact-row-half .contact-input-wrap {
+  flex: 1;
+}
+
+.contact-input-wrap {
+  width: 100%;
+}
+
+.contact-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 18px;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  outline: none;
+  font-family: 'Hashgraph', 'Aptos', 'Segoe UI', system-ui, sans-serif;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  position: relative;
+  z-index: 3;
+}
+
+.contact-input::placeholder {
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.contact-textarea {
+  resize: vertical;
+  min-height: 100px;
+  display: block;
+}
+
+.contact-submit {
+  width: 100%;
+  padding: 18px 20px;
+  border-radius: 8px;
+  border: none;
+  background: #F95303;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-family: 'Hashgraph', 'Aptos', 'Segoe UI', system-ui, sans-serif;
+  box-shadow: 0 6px 18px rgba(249, 83, 3, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  transition: transform 180ms ease, filter 180ms ease;
+}
+
+.contact-submit:hover {
+  filter: brightness(1.1);
+}
+
+.contact-edge {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(255,105,27,0.08), rgba(255,105,27,0.95) 43%, rgba(255,180,94,0.75) 57%, rgba(255,105,27,0.12));
+  filter: drop-shadow(0 0 8px rgba(255,105,27,0.45));
+  clip-path: polygon(0% 100%, 43% 100%, 57% 100%, 100% 100%, 100% 100%, 57% 100%, 43% 100%, 0% 100%);
 }
 
 /* Mobile responsive */
@@ -807,7 +1045,7 @@ body {
     transform: translateY(-50%);
     gap: 24px;
     margin-bottom: 0;
-    z-index: 10;
+    z-index: 50;
     align-items: flex-start;
   }
 
@@ -862,7 +1100,7 @@ body {
 
   /* Mission text */
   .mission-text {
-    bottom: 8%;
+    bottom: 10%;
     left: 24px;
     right: 24px;
   }
