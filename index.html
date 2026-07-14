@@ -205,6 +205,35 @@
   </section>
   <section id="product-globe" class="page-section">
     <canvas id="product-globe-canvas"></canvas>
+    <div class="reach-overlay">
+      <div class="reach-gradient"></div>
+      <div class="reach-stats">
+        <div class="reach-row">
+          <div class="reach-stat">
+            <span class="reach-number" data-target="2010" data-is-year="true">0</span>
+            <span class="reach-label">YEAR FOUNDED</span>
+          </div>
+          <div class="reach-stat">
+            <span class="reach-number" data-target="21">0</span>
+            <span class="reach-label">COUNTRIES</span>
+          </div>
+          <div class="reach-stat">
+            <span class="reach-number" data-target="150">0</span>
+            <span class="reach-label">EMPLOYEES</span>
+          </div>
+        </div>
+        <div class="reach-row">
+          <div class="reach-stat">
+            <span class="reach-number" data-target="450">0</span>
+            <span class="reach-label">CONTAINERS<br>MONTHLY</span>
+          </div>
+          <div class="reach-stat">
+            <span class="reach-number" data-target="50" data-suffix="+">0</span>
+            <span class="reach-label">CLIENTS<br>WORLDWIDE</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
   <section id="contact" class="contact-section">
     <div class="office-scene">
@@ -470,6 +499,78 @@
         onLeave: function() { canvas.style.visibility = 'hidden'; },
         onEnterBack: function() { canvas.style.visibility = 'visible'; },
         onLeaveBack: function() { canvas.style.visibility = 'hidden'; },
+      });
+    })();
+
+    // Reach stats overlay — fade + counter animation
+    (function() {
+      var overlay = document.querySelector('.reach-overlay');
+      var numbers = document.querySelectorAll('.reach-number');
+      var countersStarted = false;
+      var countersComplete = false;
+      var REACH_CUT = 160 / 254;
+
+      function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+      function animateCounters() {
+        if (countersStarted) return;
+        countersStarted = true;
+        var duration = 1800;
+        var startTime = performance.now();
+
+        function tick(now) {
+          var elapsed = now - startTime;
+          var t = Math.min(elapsed / duration, 1);
+          var eased = easeOutCubic(t);
+
+          numbers.forEach(function(el) {
+            var target = parseInt(el.getAttribute('data-target'));
+            var suffix = el.getAttribute('data-suffix') || '';
+            var isYear = el.getAttribute('data-is-year') === 'true';
+            var start = isYear ? 1990 : 0;
+            var val = Math.round(start + (target - start) * eased);
+            el.textContent = val + suffix;
+          });
+
+          if (t < 1) requestAnimationFrame(tick);
+          else countersComplete = true;
+        }
+        requestAnimationFrame(tick);
+      }
+
+      function resetCounters() {
+        countersStarted = false;
+        countersComplete = false;
+        numbers.forEach(function(el) {
+          var suffix = el.getAttribute('data-suffix') || '';
+          el.textContent = '0' + suffix;
+        });
+      }
+
+      ScrollTrigger.create({
+        trigger: '#product-globe',
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: false,
+        onUpdate: function(self) {
+          var p = self.progress;
+          if (p >= REACH_CUT) {
+            var reachLocal = (p - REACH_CUT) / (1 - REACH_CUT);
+            var fadeP = Math.min(reachLocal / 0.15, 1);
+            overlay.style.opacity = fadeP;
+            overlay.style.visibility = 'visible';
+            if (fadeP > 0.3) animateCounters();
+          } else {
+            overlay.style.opacity = '0';
+            overlay.style.visibility = 'hidden';
+            resetCounters();
+          }
+        },
+        onLeaveBack: function() {
+          overlay.style.opacity = '0';
+          overlay.style.visibility = 'hidden';
+          resetCounters();
+        }
       });
     })();
 
