@@ -25,27 +25,6 @@
     <defs id="liquid-glass-defs"></defs>
   </svg>
 
-  <!-- Glass Controls Panel (hidden) -->
-  <div id="glass-controls" style="display:none !important">
-    <div class="gc-header">
-      <span>Glass Controls</span>
-      <button id="gc-close">&times;</button>
-    </div>
-    <div class="gc-section">REFRACTION</div>
-    <label>Thickness <input type="range" id="gc-thickness" min="10" max="200" value="72"><span id="gc-thickness-val">72</span></label>
-    <label>Bezel <input type="range" id="gc-bezel" min="2" max="40" value="10"><span id="gc-bezel-val">10</span></label>
-    <label>IOR <input type="range" id="gc-ior" min="1.0" max="3.0" step="0.05" value="1.55"><span id="gc-ior-val">1.55</span></label>
-    <div class="gc-section">LOOK</div>
-    <label>Blur <input type="range" id="gc-blur" min="0" max="12" step="0.1" value="5.5"><span id="gc-blur-val">5.5</span></label>
-    <label>Specular <input type="range" id="gc-specular" min="0" max="1" step="0.05" value="0.65"><span id="gc-specular-val">0.65</span></label>
-    <label>Tint <input type="range" id="gc-tint" min="0" max="30" step="1" value="5"><span id="gc-tint-val">5%</span></label>
-    <label>Shadow <input type="range" id="gc-shadow" min="0" max="1" step="0.05" value="0.30"><span id="gc-shadow-val">0.30</span></label>
-    <div class="gc-section">BORDER</div>
-    <label>Width <input type="range" id="gc-border-w" min="0.25" max="3" step="0.25" value="0.5"><span id="gc-border-w-val">0.5</span></label>
-    <label>Shine <input type="range" id="gc-border-shine" min="0.1" max="1" step="0.05" value="0.7"><span id="gc-border-shine-val">0.70</span></label>
-    <label>Idle Opacity <input type="range" id="gc-border-idle" min="0.05" max="1" step="0.05" value="0.3"><span id="gc-border-idle-val">0.30</span></label>
-  </div>
-  <button id="gc-toggle" style="display:none !important">&#9881; Glass</button>
 
   <section class="hero">
     <canvas id="frame-canvas"></canvas>
@@ -1323,80 +1302,6 @@
     setTimeout(initLiquidGlass, 200);
     window.addEventListener('resize', () => setTimeout(initLiquidGlass, 200));
 
-    // Glass controls panel
-    var gcPanel = document.getElementById('glass-controls');
-    var gcToggle = document.getElementById('gc-toggle');
-    var gcClose = document.getElementById('gc-close');
-
-    gcToggle.addEventListener('click', function() { gcPanel.classList.add('open'); gcToggle.style.display = 'none'; });
-    gcClose.addEventListener('click', function() { gcPanel.classList.remove('open'); gcToggle.style.display = ''; });
-
-    ['thickness','bezel','ior','blur','specular','tint','shadow','border-w','border-shine','border-idle'].forEach(function(key) {
-      var el = document.getElementById('gc-' + key);
-      el.addEventListener('input', function() {
-        document.getElementById('gc-' + key + '-val').textContent = key === 'tint' ? el.value + '%' : el.value;
-        updateGlassFromControls();
-      });
-    });
-
-    function updateGlassFromControls() {
-      var thickness = +document.getElementById('gc-thickness').value;
-      var bezel = +document.getElementById('gc-bezel').value;
-      var ior = +document.getElementById('gc-ior').value;
-      var blur = +document.getElementById('gc-blur').value;
-      var specOpacity = +document.getElementById('gc-specular').value;
-      var tint = +document.getElementById('gc-tint').value;
-      var shadow = +document.getElementById('gc-shadow').value;
-      var borderW = +document.getElementById('gc-border-w').value;
-      var borderShine = +document.getElementById('gc-border-shine').value;
-      var borderIdle = +document.getElementById('gc-border-idle').value;
-
-      var btns = document.querySelectorAll('.liquid-glass');
-      var filtersHTML = '';
-      var radius = 8;
-      var specSat = 3;
-
-      btns.forEach(function(btn, i) {
-        var w = btn.offsetWidth, h = btn.offsetHeight;
-        if (w < 2 || h < 2) return;
-        var filterId = 'liquid-glass-filter-' + i;
-        var clampedBezel = Math.min(bezel, Math.min(w, h) / 2 - 1);
-        var profile = calcRefractionProfile(thickness, clampedBezel, ior, 64);
-        var maxDisp = Math.max.apply(null, Array.from(profile).map(Math.abs)) || 1;
-        var dispUrl = genDisplacementMap(w, h, radius, clampedBezel, profile, maxDisp);
-        var specUrl = genSpecularMap(w, h, radius, clampedBezel * 2);
-        var scale = maxDisp * 0.8;
-
-        filtersHTML += '<filter id="' + filterId + '" x="0%" y="0%" width="100%" height="100%">' +
-          '<feGaussianBlur in="SourceGraphic" stdDeviation="' + blur + '" result="blurred_source"/>' +
-          '<feImage href="' + dispUrl + '" x="0" y="0" width="' + w + '" height="' + h + '" result="disp_map"/>' +
-          '<feDisplacementMap in="blurred_source" in2="disp_map" scale="' + scale + '" xChannelSelector="R" yChannelSelector="G" result="displaced"/>' +
-          '<feColorMatrix in="displaced" type="saturate" values="' + specSat + '" result="displaced_sat"/>' +
-          '<feImage href="' + specUrl + '" x="0" y="0" width="' + w + '" height="' + h + '" result="spec_layer"/>' +
-          '<feComposite in="displaced_sat" in2="spec_layer" operator="in" result="spec_masked"/>' +
-          '<feComponentTransfer in="spec_layer" result="spec_faded"><feFuncA type="linear" slope="' + specOpacity + '"/></feComponentTransfer>' +
-          '<feBlend in="spec_masked" in2="displaced" mode="normal" result="with_sat"/>' +
-          '<feBlend in="spec_faded" in2="with_sat" mode="normal"/>' +
-          '</filter>';
-
-        btn.style.setProperty('--liquid-filter', 'url(#' + filterId + ')');
-        var specEl = btn.querySelector('.liquid-specular');
-        if (specEl) specEl.style.backgroundImage = 'url(' + specUrl + ')';
-      });
-
-      document.getElementById('liquid-glass-defs').innerHTML = filtersHTML;
-
-      document.querySelectorAll('.liquid-glass .liquid-tint').forEach(function(el) {
-        el.style.background = 'rgba(255, 255, 255, ' + (tint / 100) + ')';
-        el.style.boxShadow = 'inset 0 0 6px -2px rgba(255, 255, 255, ' + shadow + ')';
-      });
-
-      document.querySelectorAll('.glass-nav').forEach(function(btn) {
-        btn.style.setProperty('--gc-border-w', borderW + 'px');
-        btn.style.setProperty('--gc-shine', borderShine);
-        btn.style.setProperty('--gc-idle', borderIdle);
-      });
-    }
 
     // Border shine animation on hover (nav buttons + contact glass elements)
     document.querySelectorAll('.glass-nav, .glass-contact-el').forEach(btn => {
