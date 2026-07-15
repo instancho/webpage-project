@@ -1812,6 +1812,13 @@
       window.addEventListener('resize', scheduleReveal);
 
     })();
+
+    // Language switcher
+    document.querySelector('.lang-option').addEventListener('click', function() {
+      var lang = this.getAttribute('data-lang');
+      localStorage.setItem('site-lang', lang);
+      location.href = lang === 'zh' ? 'zh.html' : 'index.html';
+    });
   </script>
 </body>
 </html>

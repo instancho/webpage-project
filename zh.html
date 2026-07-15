@@ -91,9 +91,9 @@
 
     <!-- Language selector -->
     <div class="lang-selector">
-      <button class="lang-btn">EN</button>
+      <button class="lang-btn">中文</button>
       <div class="lang-dropdown">
-        <button class="lang-option" data-lang="zh">中文</button>
+        <button class="lang-option" data-lang="en">EN</button>
       </div>
     </div>
 
@@ -1812,6 +1812,13 @@
       window.addEventListener('resize', scheduleReveal);
 
     })();
+
+    // Language switcher
+    document.querySelector('.lang-option').addEventListener('click', function() {
+      var lang = this.getAttribute('data-lang');
+      localStorage.setItem('site-lang', lang);
+      location.href = lang === 'zh' ? 'zh.html' : 'index.html';
+    });
   </script>
 </body>
 </html>
