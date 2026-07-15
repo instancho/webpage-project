@@ -332,103 +332,121 @@
     var activeZone = 'hero';   // which trigger is active
     var zoneProgress = 0;      // scrubbed progress within that trigger
 
-    // Concurrency-limited frame loader
+    // Concurrency-limited frame loader with scroll-driven prioritization
     var FrameLoader = (function() {
-      var MAX_CONCURRENT = 6;
+      var MAX_CONCURRENT = 8;
       var active = 0;
-      var queue = [];
+      var highQueue = [];
+      var lowQueue = [];
 
       function drain() {
-        while (active < MAX_CONCURRENT && queue.length) {
-          var job = queue.shift();
-          if (job.img.src && job.img.complete) { if (job.cb) job.cb(); continue; }
+        while (active < MAX_CONCURRENT) {
+          var job = highQueue.length ? highQueue.shift() : (lowQueue.length ? lowQueue.shift() : null);
+          if (!job) break;
+          if (job.img.src) continue;
           active++;
           (function(j) {
-            j.img.onload = j.img.onerror = function() {
-              active--;
-              if (j.cb) j.cb();
-              drain();
-            };
+            j.img.onload = j.img.onerror = function() { active--; drain(); };
             j.img.src = j.url;
           })(job);
         }
       }
 
-      function enqueue(img, url, priority, cb) {
-        var job = { img: img, url: url, priority: priority, cb: cb };
-        var inserted = false;
-        for (var i = 0; i < queue.length; i++) {
-          if (priority < queue[i].priority) { queue.splice(i, 0, job); inserted = true; break; }
-        }
-        if (!inserted) queue.push(job);
+      function addLow(img, url) {
+        if (img.src) return;
+        lowQueue.push({ img: img, url: url });
         drain();
       }
 
-      function reprioritize(getFrameIndex) {
-        if (!queue.length) return;
-        var center = getFrameIndex();
-        queue.forEach(function(job) {
-          job.priority = Math.abs(job.originalIndex - center);
-        });
-        queue.sort(function(a, b) { return a.priority - b.priority; });
+      function addHigh(img, url) {
+        if (img.src) return;
+        for (var i = lowQueue.length - 1; i >= 0; i--) {
+          if (lowQueue[i].img === img) { lowQueue.splice(i, 1); break; }
+        }
+        for (var i = 0; i < highQueue.length; i++) {
+          if (highQueue[i].img === img) return;
+        }
+        highQueue.push({ img: img, url: url });
+        drain();
       }
 
-      return { enqueue: enqueue, reprioritize: reprioritize };
+      return { addLow: addLow, addHigh: addHigh };
     })();
 
-    // Frame sequence with GSAP ScrollTrigger
+    function padNum(n) { return String(n).padStart(4, '0'); }
+
+    function nearestLoaded(frames, idx) {
+      if (frames[idx] && frames[idx].complete) return frames[idx];
+      for (var d = 1; d < frames.length; d++) {
+        if (idx - d >= 0 && frames[idx - d] && frames[idx - d].complete) return frames[idx - d];
+        if (idx + d < frames.length && frames[idx + d] && frames[idx + d].complete) return frames[idx + d];
+      }
+      return null;
+    }
+
+    function drawCover(ctx, canvas, img, lastImg) {
+      if (!img || !img.complete) img = lastImg;
+      if (!img || !img.complete) return null;
+      var iw = img.naturalWidth, ih = img.naturalHeight;
+      var cw = canvas.width, ch = canvas.height;
+      var imgRatio = iw / ih, canvasRatio = cw / ch;
+      var sx, sy, sw, sh;
+      if (canvasRatio > imgRatio) {
+        sw = iw; sh = iw / canvasRatio; sx = 0; sy = (ih - sh) / 2;
+      } else {
+        sh = ih; sw = ih * canvasRatio; sx = (iw - sw) / 2; sy = 0;
+      }
+      ctx.drawImage(img, sx, sy, sw, sh, 0, 0, cw, ch);
+      return img;
+    }
+
+    // Prioritize a window of frames around a center index
+    function prioritizeWindow(frames, urls, centerIdx, halfWindow) {
+      for (var d = 0; d <= halfWindow; d++) {
+        var before = centerIdx - d;
+        var after = centerIdx + d;
+        if (after < frames.length && frames[after]) FrameLoader.addHigh(frames[after], urls[after]);
+        if (before >= 0 && before !== after && frames[before]) FrameLoader.addHigh(frames[before], urls[before]);
+      }
+    }
+
+    // Hero + About frame sequences
     (function() {
       var canvas = document.getElementById('frame-canvas');
       var ctx = canvas.getContext('2d');
-      var currentImg = null;
+      var lastDrawn = null;
 
-      function padNum(n) { return String(n).padStart(4, '0'); }
-
-      function drawCover(img) {
-        if (img === currentImg) return;
-        if (!img || !img.complete) return;
-        currentImg = img;
-        var iw = img.naturalWidth, ih = img.naturalHeight;
-        var cw = canvas.width, ch = canvas.height;
-        var imgRatio = iw / ih, canvasRatio = cw / ch;
-        var sx, sy, sw, sh;
-        if (canvasRatio > imgRatio) {
-          sw = iw; sh = iw / canvasRatio; sx = 0; sy = (ih - sh) / 2;
-        } else {
-          sh = ih; sw = ih * canvasRatio; sx = (iw - sw) / 2; sy = 0;
-        }
-        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, cw, ch);
-      }
+      var HERO_TOTAL = 300;
+      var heroFrames = new Array(HERO_TOTAL);
+      var heroUrls = new Array(HERO_TOTAL);
+      var ABOUT_TOTAL = 540;
+      var aboutFrames = new Array(ABOUT_TOTAL);
+      var aboutUrls = new Array(ABOUT_TOTAL);
 
       function resizeCanvas() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        currentImg = null;
-        if (heroFrames[0] && heroFrames[0].complete) drawCover(heroFrames[0]);
+        lastDrawn = null;
+        var f = nearestLoaded(heroFrames, 0);
+        if (f) lastDrawn = drawCover(ctx, canvas, f, null);
       }
 
-      var HERO_TOTAL = 300;
-      var heroFrames = new Array(HERO_TOTAL);
-      var ABOUT_TOTAL = 540;
-      var aboutFrames = new Array(ABOUT_TOTAL);
-      var currentHeroIdx = 0;
-
-      // Load frame 1 immediately for instant display
-      heroFrames[0] = new Image();
-      heroFrames[0].onload = function() { resizeCanvas(); };
-      heroFrames[0].src = './assets/frames-webp/0001.webp';
-
-      // Queue hero frames 2-300 (priority = distance from frame 1)
-      for (var i = 1; i < HERO_TOTAL; i++) {
+      // Create all Image objects + URLs, load frame 1 immediately
+      for (var i = 0; i < HERO_TOTAL; i++) {
         heroFrames[i] = new Image();
-        FrameLoader.enqueue(heroFrames[i], './assets/frames-webp/' + padNum(i + 1) + '.webp', i, null);
+        heroUrls[i] = './assets/frames-webp/' + padNum(i + 1) + '.webp';
       }
+      heroFrames[0].onload = function() { resizeCanvas(); };
+      heroFrames[0].src = heroUrls[0];
 
-      // Queue about frames 301-840 (lower priority, after hero)
       for (var i = 0; i < ABOUT_TOTAL; i++) {
         aboutFrames[i] = new Image();
-        FrameLoader.enqueue(aboutFrames[i], './assets/frames-webp/' + padNum(301 + i) + '.webp', HERO_TOTAL + i, null);
+        aboutUrls[i] = './assets/frames-webp/' + padNum(301 + i) + '.webp';
       }
+
+      // Background sequential loading — hero then about
+      for (var i = 1; i < HERO_TOTAL; i++) FrameLoader.addLow(heroFrames[i], heroUrls[i]);
+      for (var i = 0; i < ABOUT_TOTAL; i++) FrameLoader.addLow(aboutFrames[i], aboutUrls[i]);
 
       window.addEventListener('resize', resizeCanvas);
 
@@ -438,9 +456,11 @@
         end: 'bottom bottom',
         scrub: 0.5,
         onUpdate: function(self) {
-          var frameIndex = Math.min(Math.floor(self.progress * HERO_TOTAL), HERO_TOTAL - 1);
-          currentHeroIdx = frameIndex;
-          drawCover(heroFrames[frameIndex]);
+          var idx = Math.min(Math.floor(self.progress * HERO_TOTAL), HERO_TOTAL - 1);
+          prioritizeWindow(heroFrames, heroUrls, idx, 15);
+          var img = heroFrames[idx].complete ? heroFrames[idx] : nearestLoaded(heroFrames, idx);
+          var drawn = drawCover(ctx, canvas, img, lastDrawn);
+          if (drawn) lastDrawn = drawn;
           activeZone = 'hero'; zoneProgress = self.progress;
           scheduleProgress();
         }
@@ -452,59 +472,47 @@
         end: 'bottom bottom',
         scrub: 0.5,
         onUpdate: function(self) {
-          var frameIndex = Math.min(Math.floor(self.progress * ABOUT_TOTAL), ABOUT_TOTAL - 1);
-          drawCover(aboutFrames[frameIndex]);
+          var idx = Math.min(Math.floor(self.progress * ABOUT_TOTAL), ABOUT_TOTAL - 1);
+          prioritizeWindow(aboutFrames, aboutUrls, idx, 15);
+          var img = aboutFrames[idx].complete ? aboutFrames[idx] : nearestLoaded(aboutFrames, idx);
+          var drawn = drawCover(ctx, canvas, img, lastDrawn);
+          if (drawn) lastDrawn = drawn;
           activeZone = 'about'; zoneProgress = self.progress;
           scheduleProgress();
         }
       });
     })();
 
-    // Product + Globe sequence (deferred — starts loading after hero begins)
+    // Product + Globe sequence (deferred until approaching section)
     (function() {
       var canvas = document.getElementById('product-globe-canvas');
       var ctx = canvas.getContext('2d');
-      var currentImg = null;
+      var lastDrawn = null;
       var PG_TOTAL = 254;
       var pgFrames = new Array(PG_TOTAL);
+      var pgUrls = new Array(PG_TOTAL);
       var pgQueued = false;
 
-      function padNum(n) { return String(n).padStart(4, '0'); }
-
-      function drawPG(img) {
-        if (img === currentImg) return;
-        if (!img || !img.complete) return;
-        currentImg = img;
-        var iw = img.naturalWidth, ih = img.naturalHeight;
-        var cw = canvas.width, ch = canvas.height;
-        var imgRatio = iw / ih, canvasRatio = cw / ch;
-        var sx, sy, sw, sh;
-        if (canvasRatio > imgRatio) {
-          sw = iw; sh = iw / canvasRatio; sx = 0; sy = (ih - sh) / 2;
-        } else {
-          sh = ih; sw = ih * canvasRatio; sx = (iw - sw) / 2; sy = 0;
-        }
-        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, cw, ch);
+      for (var i = 0; i < PG_TOTAL; i++) {
+        pgFrames[i] = new Image();
+        pgUrls[i] = './assets/product-globe-webp/' + padNum(i + 1) + '.webp';
       }
 
       function resizePGCanvas() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        currentImg = null;
-        if (pgFrames[0] && pgFrames[0].complete) drawPG(pgFrames[0]);
+        lastDrawn = null;
+        var f = nearestLoaded(pgFrames, 0);
+        if (f) lastDrawn = drawCover(ctx, canvas, f, null);
       }
 
       function queuePGFrames() {
         if (pgQueued) return;
         pgQueued = true;
-        for (var i = 0; i < PG_TOTAL; i++) {
-          pgFrames[i] = new Image();
-          FrameLoader.enqueue(pgFrames[i], './assets/product-globe-webp/' + padNum(i + 1) + '.webp', 1200 + i, null);
-        }
+        for (var i = 0; i < PG_TOTAL; i++) FrameLoader.addLow(pgFrames[i], pgUrls[i]);
       }
 
-      // Start loading PG frames after a short delay (let hero frames get a head start)
-      setTimeout(queuePGFrames, 2000);
+      setTimeout(queuePGFrames, 3000);
 
       canvas.style.visibility = 'hidden';
       canvas.style.opacity = '0';
@@ -518,8 +526,11 @@
         scrub: 0.5,
         onUpdate: function(self) {
           queuePGFrames();
-          var frameIndex = Math.min(Math.floor(self.progress * PG_TOTAL), PG_TOTAL - 1);
-          drawPG(pgFrames[frameIndex]);
+          var idx = Math.min(Math.floor(self.progress * PG_TOTAL), PG_TOTAL - 1);
+          prioritizeWindow(pgFrames, pgUrls, idx, 15);
+          var img = pgFrames[idx].complete ? pgFrames[idx] : nearestLoaded(pgFrames, idx);
+          var drawn = drawCover(ctx, canvas, img, lastDrawn);
+          if (drawn) lastDrawn = drawn;
           activeZone = 'pg'; zoneProgress = self.progress;
           scheduleProgress();
         }
