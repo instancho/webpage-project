@@ -153,6 +153,46 @@ body {
   letter-spacing: 0.08em;
 }
 
+.preloader-bottom {
+  transition: opacity 0.3s ease;
+}
+
+.preloader-lang {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.preloader-lang.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.preloader-lang-btn {
+  flex: 1;
+  padding: 14px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Hashgraph', 'Aptos', 'Segoe UI', system-ui, sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.preloader-lang-btn:hover {
+  background: rgba(249, 83, 3, 0.12);
+  border-color: rgba(249, 83, 3, 0.5);
+  color: #ffffff;
+}
+
 .hero {
   position: relative;
   width: 100vw;
