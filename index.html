@@ -16,6 +16,31 @@
   </script>
 </head>
 <body>
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="preloader-content">
+      <svg class="preloader-logo" width="110" height="76" viewBox="0 0 55 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path class="logo-path logo-path-white" pathLength="1" d="M18.413 5.22121L21.0463 0.550737C21.2381 0.210482 21.5984 0 21.989 0H27.1259H27.7701H31.2138H32.7736C33.3467 0 33.8204 0.446744 33.854 1.01884L34.1007 5.22121L34.5279 23.4623C34.5403 23.9929 34.1665 24.4565 33.6409 24.5308C32.3571 24.7123 30.8415 24.8172 29.5982 24.7208C29.0826 24.6808 28.7146 24.2343 28.7122 23.7172L28.6278 5.92954C28.569 5.52293 28.2205 5.22121 27.8096 5.22121H25.1896C24.7794 5.22121 24.4044 5.45315 24.2213 5.8202L16.2943 21.7039L13.6886 26.9251L8.52065 37.2804C8.33746 37.6474 7.9625 37.8794 7.55227 37.8794H1.85263C1.0244 37.8794 0.503113 36.987 0.909877 36.2656L6.17615 26.9251L9.11992 21.7039L18.413 5.22121Z" stroke="white" stroke-width="0.4" fill="white"/>
+        <path class="logo-path logo-path-orange" pathLength="1" d="M17.3853 36.2772L20.6796 29.6922C20.863 29.3257 21.2355 29.0989 21.6451 29.112C23.7837 29.1805 30.0692 29.3679 36.1197 28.1968C42.5129 26.9594 43.977 26.2907 52.014 20.9627C52.8309 20.4211 53.897 21.1511 53.6758 22.1059L51.8002 30.2007C50.7634 34.6754 46.777 37.8437 42.1837 37.8437H18.3532C17.5485 37.8437 17.0252 36.9968 17.3853 36.2772Z" stroke="#F95303" stroke-width="0.4" fill="#F95303"/>
+      </svg>
+      <div class="preloader-text">
+        <div class="preloader-company">YIWU ANCHANG</div>
+        <div class="preloader-sub">IMPORT & EXPORT CO LTD</div>
+      </div>
+      <div class="preloader-origin">
+        <span>YIWU / CHINA</span>
+        <span>29.3068°N / 120.0751°E</span>
+      </div>
+      <div class="preloader-bottom">
+        <div class="preloader-bar"><div class="preloader-fill"></div></div>
+        <div class="preloader-info">
+          <span class="preloader-percent">000</span>
+          <span class="preloader-status">LOADING ASSETS</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Noise filter for glass texture -->
   <svg style="position:absolute;width:0;height:0">
     <filter id="noise">
@@ -338,6 +363,8 @@
       var active = 0;
       var highQueue = [];
       var lowQueue = [];
+      var loaded = 0;
+      var onProgress = null;
 
       function drain() {
         while (active < MAX_CONCURRENT) {
@@ -346,7 +373,8 @@
           if (job.img.src) continue;
           active++;
           (function(j) {
-            j.img.onload = j.img.onerror = function() { active--; drain(); };
+            j.img.onload = function() { active--; loaded++; if (onProgress) onProgress(loaded); drain(); };
+            j.img.onerror = function() { active--; drain(); };
             j.img.src = j.url;
           })(job);
         }
@@ -370,7 +398,12 @@
         drain();
       }
 
-      return { addLow: addLow, addHigh: addHigh };
+      return {
+        addLow: addLow,
+        addHigh: addHigh,
+        setOnProgress: function(cb) { onProgress = cb; },
+        getLoaded: function() { return loaded; }
+      };
     })();
 
     function padNum(n) { return String(n).padStart(4, '0'); }
@@ -554,6 +587,52 @@
         onEnterBack: function() { canvas.style.visibility = 'visible'; },
         onLeaveBack: function() { canvas.style.visibility = 'hidden'; },
       });
+    })();
+
+    // Preloader controller
+    (function() {
+      var preloader = document.getElementById('preloader');
+      if (!preloader) return;
+      var fill = preloader.querySelector('.preloader-fill');
+      var percent = preloader.querySelector('.preloader-percent');
+      var status = preloader.querySelector('.preloader-status');
+      var TOTAL = 1093;
+      var DISMISS_AT = 200;
+      var MIN_TIME = 3000;
+      var startTime = performance.now();
+      var dismissed = false;
+
+      document.body.style.overflow = 'hidden';
+
+      function updateUI(loaded) {
+        var p = Math.min(loaded / TOTAL, 1);
+        var pct = Math.floor(p * 100);
+        fill.style.width = pct + '%';
+        percent.textContent = String(pct).padStart(3, '0');
+      }
+
+      function dismiss() {
+        if (dismissed) return;
+        dismissed = true;
+        status.textContent = 'READY';
+        percent.textContent = '100';
+        fill.style.width = '100%';
+        preloader.classList.add('dismiss');
+        setTimeout(function() {
+          document.body.style.overflow = '';
+          preloader.remove();
+          ScrollTrigger.refresh();
+        }, 900);
+      }
+
+      FrameLoader.setOnProgress(function(loaded) {
+        updateUI(loaded);
+        if (loaded >= DISMISS_AT && performance.now() - startTime >= MIN_TIME) dismiss();
+      });
+
+      setTimeout(function() {
+        if (!dismissed && FrameLoader.getLoaded() >= 50) dismiss();
+      }, 8000);
     })();
 
     // Reach stats overlay — fade + counter animation
